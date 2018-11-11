@@ -50,6 +50,14 @@ html {
     background-color: white;
 }
 
+.grid_item_card:hover {
+    box-shadow:0 0 0 128px rgba(0, 0, 0, 0.22) inset;
+}
+
+.grid_item_card:active {
+    box-shadow:0 0 0 128px rgba(0, 0, 0, 0.33) inset;
+}
+
 .hero_image {
     /*background-size: cover;*/
     width: 100%;
@@ -64,4 +72,62 @@ html {
     display: block;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.navigation {
+    position: relative;
+    width: 100%;
+    height: 70px;
+    background-color: #35373b;
+}
+
+.navigation_bar {
+    width: 70%;
+    height: 100%;
+    margin: auto;
+    text-align: left;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.navigation_bar>*{
+    user-select: none;
+}
+
+.left_btn_group {
+    display: inline-block;
+    float: left;
+
+}
+
+.exit_group {
+    display: inline-block;
+    float: right;
+    text-align: right;
+}
+
+.logo {
+    display: inline-block;
+    vertical-align: middle;
+    width: 40px;
+    height: 47px;
+
+}
+
+.button {
+    display: inline-block;
+
+    margin: 10px;
+    padding: 13px;
+    color: white;
+    font-weight: bold;
+
+    border: 3px solid;
+    border-radius: 8px;
+
+    user-select: none;
+}
+
+.button:hover {
+    background-color: #636569;
 }
