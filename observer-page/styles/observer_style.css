@@ -15,7 +15,8 @@ html {
 }
 
 .page_center {
-
+    position: relative;
+    top: 40px;
 }
 
 .grid_layout {
@@ -23,7 +24,6 @@ html {
     margin-left: auto;
     margin-right: auto;
 
-    /*width: 85.8em;*/
     width: 80%;
 
     padding-right: .2857em;
@@ -74,24 +74,15 @@ html {
     padding-bottom: 10px;
 }
 
-.navigation {
-    position: relative;
+.header_field {
+    top: 0;
+    position: fixed;
+    display: block;
     width: 100%;
     height: 70px;
     background-color: #35373b;
-}
 
-.navigation_bar {
-    width: 70%;
-    height: 100%;
-    margin: auto;
-    text-align: left;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.navigation_bar>*{
-    user-select: none;
+    z-index: 1;
 }
 
 .left_btn_group {
@@ -124,10 +115,38 @@ html {
 
     border: 3px solid;
     border-radius: 8px;
-
-    user-select: none;
 }
 
 .button:hover {
     background-color: #636569;
+}
+
+.choosed_for_delete {
+    box-shadow:0 0 0 128px rgba(0, 0, 0, 0.33) inset;
+}
+
+.choosed_for_change {
+
+}
+
+.delete_mode {
+    display: none;
+}
+
+.header_content {
+    width: 70%;
+    height: 100%;
+    margin: auto;
+    text-align: left;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.header_content>*{
+    user-select: none;
+}
+
+.white_text {
+    color: white;
+    font-weight: bold;
 }
