@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--initial scale 1 или 0, запрет/разрешение масштабирования при повороте-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Superhero, marvel, dc">
+    <meta name="description" content="This is client-server application for register superheroes">
+    <title>Superhero Census - Observer authorization</title>
+    <link rel="stylesheet" href="styles/auth_style.css">
+</head>
+<body>
+    <img src="img/background_auth.jpeg" alt="background" class="background">
+    <form action="#" class="auth_form" method="post">
+        <p class="p_login">Log In</p>
+        <input type="email" placeholder="superman@shild.sh" class="login_input" id="email_input">
+        <input type="password" placeholder="Password" class="login_input" id="password_input">
+        <div class="incorrect_auth">
+            <p id="incorrect_login">Email or password is incorrect</p>
+        </div>
+        <div class="button" id="login">Login</div>
+    </form>
+</body>
+</html>
