@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!--initial scale 1 или 0, запрет/разрешение масштабирования при повороте-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="Superhero, marvel, dc">
     <meta name="description" content="This is client-server application for register superheroes">
     <title>Superhero Census - Observer</title>
     <link rel="stylesheet" href="styles/observer_style.css">
 </head>
-<body>
+<body onload="onLoad()">
 <div class="topGrid_row">
     <ul id="messages-list" class="messages" style="position: absolute;"></ul>
 </div>
@@ -17,10 +16,7 @@
     <div class="header_field">
         <div class="navigation_bar header_content">
             <div class="left_btn_group">
-                <a id="add_btn" class="button" onclick="">
-                    <span>Add new hero!</span>
-                </a>
-                <a id="change_btn" class="button" onclick="onChange()   ">
+                <a id="change_btn" class="button" onclick="onChange()">
                     <span>Change the hero!</span>
                 </a>
                 <a id="delete_btn" class="button" onclick="onDelete()">
@@ -47,10 +43,10 @@
         </div>
         <div class="change_mode header_content">
             <span class="white_text">
-                Click on the hero, you want to change, than press "Change" button
+                Now you're in change mode. When you complete make changes, click accept
             </span>
             <a id="accept_changes" class="button" onclick="">
-                <span>Change</span>
+                <span>Accept</span>
             </a>
             <a id="cancel_changes_btn" class="button" onclick="">
                 <span>Cancel</span>
@@ -260,12 +256,13 @@
                 </div>
             </article>
         </div>
-
+        <!--<div id="new_hero_card" class="grid_item_card">-->
+            <a id="new_hero_card" onclick="onAddHero()"><img id="new_hero_card_image" src="img/New_hero_card.png"></a>
+        <!--</div>-->
     </section>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
 <script src="scripts/observerScripts.js"></script>
-<script>$( "input" ).prop( "disabled", true );</script>
 </body>
 </html>

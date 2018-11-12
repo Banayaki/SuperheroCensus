@@ -1,7 +1,14 @@
+var isDeleteMode = false;
+
+function onLoad() {
+    $( "input" ).prop( "disabled", true );
+}
+
 function onDelete() {
     $(".navigation_bar").fadeOut(400, function (){
         $(".delete_mode").fadeIn(400)
     });
+    isDeleteMode = true;
 }
 
 function onChange() {
@@ -13,25 +20,25 @@ function onChange() {
 }
 
 $(".grid_item_card").click(function () {
-    if ($(".delete_mode").css('display') !== 'none') {
+    if (isDeleteMode) {
         $(this).toggleClass("choosed_for_delete")
     }
 });
 
 $("#cancel_changes_btn").click(function () {
+    $("input").prop("disabled", true);
+    $("input").removeClass("editable_input");
     $(".change_mode").fadeOut(400, function (){
         $(".navigation_bar").fadeIn(400)
     });
-    $("input").removeClass("editable_input");
-    $("input").prop("disabled", true);
-
 });
 
 $("#cancel_delete_btn").click(function () {
+    isDeleteMode = false;
+    $(".grid_item_card").removeClass("choosed_for_delete");
     $(".delete_mode").fadeOut(400, function (){
         $(".navigation_bar").fadeIn(400)
     });
-    $(".grid_item_card").removeClass("choosed_for_delete")
 });
 
 $("#accept_changes").click(function () {
