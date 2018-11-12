@@ -16,9 +16,6 @@
     <div class="header_field">
         <div class="navigation_bar header_content">
             <div class="left_btn_group">
-                <a id="change_btn" class="button" onclick="onChange()">
-                    <span>Change the hero!</span>
-                </a>
                 <a id="delete_btn" class="button" onclick="onDelete()">
                     <span>Delete the hero!</span>
                 </a>
@@ -72,7 +69,10 @@
     <section class="grid_layout">
         <div class="grid_item_card">
             <article id="card_1" class="card">
-                <span class="card_name">Iron man</span>
+                <div class="card_head">
+                    <span class="card_name">Iron man</span>
+                    <a class="head_change_pencil"><img class="head_image" src="img/pencil.png"></a>
+                </div>
                 <div class="hero_image_href">
                     <!-- Open profile?-->
                     <img class="hero_image" alt="Iron Man" src="img/Iron_Man_icon.png">

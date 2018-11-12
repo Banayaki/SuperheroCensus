@@ -9,15 +9,23 @@ function onDelete() {
         $(".delete_mode").fadeIn(400)
     });
     isDeleteMode = true;
+    $(".head_image").hide();
 }
 
-function onChange() {
+$(".head_change_pencil").click(function () {
     $(".navigation_bar").fadeOut(400, function (){
         $(".change_mode").fadeIn(400)
     });
-    $("input").toggleClass("editable_input");
-    $("input").prop("disabled", false);
-}
+    $(this).hide();
+    // Ужасный поиск нужных инпутов.
+    let input_tags = $(this).parent("div").siblings(".hero_desc").children("label").children("input");
+    input_tags.toggleClass("editable_input");
+    if (input_tags.prop("disabled") === false) {
+        input_tags.prop("disabled", true)
+    } else {
+        input_tags.prop("disabled", false);
+    }
+});
 
 $(".grid_item_card").click(function () {
     if (isDeleteMode) {
@@ -31,6 +39,7 @@ $("#cancel_changes_btn").click(function () {
     $(".change_mode").fadeOut(400, function (){
         $(".navigation_bar").fadeIn(400)
     });
+    $(".head_change_pencil").show();
 });
 
 $("#cancel_delete_btn").click(function () {
@@ -39,6 +48,7 @@ $("#cancel_delete_btn").click(function () {
     $(".delete_mode").fadeOut(400, function (){
         $(".navigation_bar").fadeIn(400)
     });
+    $(".head_image").show();
 });
 
 $("#accept_changes").click(function () {

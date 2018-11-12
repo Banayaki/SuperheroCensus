@@ -255,3 +255,22 @@ input {
     width: 250px;
     z-index: 1;
 }
+
+.card_head {
+    display: block;
+    height: 20px;
+}
+
+.card_name {
+    display: inline-block;
+    font-size: x-large;
+    float:left;
+}
+
+.head_image {
+    display: inline-block;
+
+    width: 20px;
+    height: 20px;
+    float: right;
+}
