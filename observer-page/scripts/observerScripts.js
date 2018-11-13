@@ -12,11 +12,22 @@ function onDelete() {
     $(".head_image").hide();
 }
 
+function onAddHero() {
+    $(".navigation_bar").fadeOut(400, function (){
+        $(".add_mode").fadeIn(400)
+    });
+    $(".page_center").fadeOut(400, function () {
+        $(".page_center_addhero").fadeIn(400, function () {
+            $("input").prop("disabled", false);
+        });
+    });
+}
+
 $(".head_change_pencil").click(function () {
     $(".navigation_bar").fadeOut(400, function (){
         $(".change_mode").fadeIn(400)
     });
-    $(this).hide();
+    $(".head_change_pencil").hide();
     // Ужасный поиск нужных инпутов.
     let input_tags = $(this).parent("div").siblings(".hero_desc").children("label").children("input");
     input_tags.toggleClass("editable_input");
@@ -31,6 +42,17 @@ $(".grid_item_card").click(function () {
     if (isDeleteMode) {
         $(this).toggleClass("choosed_for_delete")
     }
+});
+
+$("#cancel_adding_btn").click(function () {
+    $("input").prop("disabled", true);
+    $("input").removeClass("editable_input");
+    $(".add_mode").fadeOut(400, function (){
+        $(".navigation_bar").fadeIn(400)
+    });
+    $(".page_center_addhero").fadeOut(400, function () {
+        $(".page_center").fadeIn(400);
+    });
 });
 
 $("#cancel_changes_btn").click(function () {

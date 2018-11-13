@@ -27,6 +27,17 @@
                 <img class="logo" src="img/logo.png">
             </div>
         </div>
+        <div class="add_mode header_content">
+            <span class="white_text">
+                Please fill at least name. When accept adding.
+            </span>
+            <a id="add_card_btn" class="button">
+                <span>Add</span>
+            </a>
+            <a id="cancel_adding_btn" class="button">
+                <span>Cancel</span>
+            </a>
+        </div>
         <div class="delete_mode header_content">
             <span class="white_text">
                 Now you're in delete mode. Select cards what you want to delete. When press button
@@ -103,7 +114,10 @@
         </div>
         <div class="grid_item_card">
             <article id="card_2" class="card">
-                <span class="card_name">Batman</span>
+                <div class="card_head">
+                    <span class="card_name">Batman</span>
+                    <a class="head_change_pencil"><img class="head_image" src="img/pencil.png"></a>
+                </div>
                 <div class="hero_image_href">
                     <!-- Open profile?-->
                     <img class="hero_image" alt="Batman" src="img/Batman_icon.png">
@@ -132,135 +146,46 @@
                 </div>
             </article>
         </div>
-        <div class="grid_item_card">
-            <article id="card_3" class="card">
-                <span class="card_name">Бэтман</span>
-                <div class="hero_image_href">
-                    <!-- Open profile?-->
-                    <img class="hero_image" alt="Batman" src="img/Batman_icon.png">
-                </div>
-                <div class="hero_desc">
-                    <label>
-                        <strong>Universe</strong>
-                        <input type="text" class="universe_input">
-                    </label>
-                    <label>
-                        <strong>Power</strong>
-                        <input type="number" class="power_input">
-                    </label>
-                    <label>
-                        <strong>Desc</strong>
-                        <input type="text" class="desc_input">
-                    </label>
-                    <label>
-                        <strong>Alive</strong>
-                        <input type="checkbox" class="is_alive_input">
-                    </label>
-                    <label>
-                        <strong>Phone</strong>
-                        <input type="text" class="phone_input">
-                    </label>
-                </div>
-            </article>
-        </div>
-        <div class="grid_item_card">
-            <article id="card_4" class="card">
-                <span class="card_name">Бэтман</span>
-                <div class="hero_image_href">
-                    <!-- Open profile?-->
-                    <img class="hero_image" alt="Batman" src="img/Batman_icon.png">
-                </div>
-                <div class="hero_desc">
-                    <label>
-                        <strong>Universe</strong>
-                        <input type="text" class="universe_input">
-                    </label>
-                    <label>
-                        <strong>Power</strong>
-                        <input type="number" class="power_input">
-                    </label>
-                    <label>
-                        <strong>Desc</strong>
-                        <input type="text" class="desc_input">
-                    </label>
-                    <label>
-                        <strong>Alive</strong>
-                        <input type="checkbox" class="is_alive_input">
-                    </label>
-                    <label>
-                        <strong>Phone</strong>
-                        <input type="text" class="phone_input">
-                    </label>
-                </div>
-            </article>
-        </div>
-        <div class="grid_item_card">
-            <article id="card_5" class="card">
-                <span class="card_name">Бэтман</span>
-                <div class="hero_image_href">
-                    <!-- Open profile?-->
-                    <img class="hero_image" alt="Batman" src="img/Batman_icon.png">
-                </div>
-                <div class="hero_desc">
-                    <label>
-                        <strong>Universe</strong>
-                        <input type="text" id="universe_input">
-                    </label>
-                    <label>
-                        <strong>Power</strong>
-                        <input type="number" class="power_input">
-                    </label>
-                    <label>
-                        <strong>Desc</strong>
-                        <input type="text" class="desc_input">
-                    </label>
-                    <label>
-                        <strong>Alive</strong>
-                        <input type="checkbox" class="is_alive_input">
-                    </label>
-                    <label>
-                        <strong>Phone</strong>
-                        <input type="text" class="phone_input">
-                    </label>
-                </div>
-            </article>
-        </div>
-        <div class="grid_item_card">
-            <article id="card_6" class="card">
-                <span class="card_name">Бэтман</span>
-                <div class="hero_image_href">
-                    <!-- Open profile?-->
-                    <img class="hero_image" alt="Batman" src="img/Batman_icon.png">
-                </div>
-                <div class="hero_desc">
-                    <label>
-                        <strong>Universe</strong>
-                        <input type="text" class="universe_input">
-                    </label>
-                    <label>
-                        <strong>Power</strong>
-                        <input type="number" class="power_input">
-                    </label>
-                    <label>
-                        <strong>Desc</strong>
-                        <input type="text" class="desc_input">
-                    </label>
-                    <label>
-                        <strong>Alive</strong>
-                        <input type="checkbox" class="is_alive_input">
-                    </label>
-                    <label>
-                        <strong>Phone</strong>
-                        <input type="text" class="phone_input">
-                    </label>
-                </div>
-            </article>
-        </div>
-        <!--<div id="new_hero_card" class="grid_item_card">-->
-            <a id="new_hero_card" onclick="onAddHero()"><img id="new_hero_card_image" src="img/New_hero_card.png"></a>
-        <!--</div>-->
+        <a id="new_hero_card" onclick="onAddHero()"><img id="new_hero_card_image" src="img/New_hero_card.png"></a>
     </section>
 </div>
+
+<div class="page_center_addhero">
+    <div class="new_hero">
+        <form >
+            <input type="text" class="add_inputs" placeholder="Hero name" name="name">
+            <label class="add_inputs">
+                <strong id="hero_logo_text">Hero logo</strong>
+                <input id="fileloader" type="file" name="logo" accept="image/png">
+            </label>
+            <label class="add_inputs">
+                <strong>Universe</strong>
+                <input type="text" placeholder="Marvel" name="universe">
+            </label>
+            <label class="add_inputs">
+                <strong>Power</strong>
+                <input type="number" placeholder="70" name="power" min="0" max="100">
+            </label>
+            <label class="add_inputs">
+                <strong>Desc</strong>
+                <input type="text" placeholder="Saved a world" name="desc">
+            </label>
+            <label class="add_inputs" id="check_box_place">
+                Alive
+                <input class="is_alive_input" id="add_hero_checkbox" type="checkbox" checked name="isalive">
+            </label>
+            <label class="add_inputs">
+                <strong>Phone</strong>
+                <input type="text" placeholder="900-900-999" name="phone">
+            </label>
+        </form>
+    </div>
+    <div class="adding_messages">
+        <span class="message_title">Messages</span>
+        <span class="message">Need to add hero name</span>
+    </div>
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
 <script src="scripts/observerScripts.js"></script>

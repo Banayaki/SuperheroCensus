@@ -11,7 +11,6 @@
 
 html {
     background-color: #e9eaed;
-
 }
 
 .page_center {
@@ -140,7 +139,8 @@ input {
 
 }
 
-.delete_mode, .change_mode {
+/*Hidden*/
+.delete_mode, .change_mode, .add_mode, .page_center_addhero {
     display: none;
 }
 
@@ -153,7 +153,15 @@ input {
     overflow-y: hidden;
 }
 
-.header_content > *, .card_name {
+/*.header_content > *, .card_name, .head_change_pencil, .hero_image, .hero_desc > *, .new_hero_card,*/
+/*.new_hero_card > * {*/
+    /*user-select: none;*/
+    /*-moz-user-select: none;*/
+    /*-webkit-user-select: none;*/
+    /*-ms-user-select: none;*/
+/*}*/
+
+* {
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -264,7 +272,7 @@ input {
 .card_name {
     display: inline-block;
     font-size: x-large;
-    float:left;
+    float: left;
 }
 
 .head_image {
@@ -273,4 +281,75 @@ input {
     width: 20px;
     height: 20px;
     float: right;
+}
+
+.page_center_addhero {
+    position: relative;
+    top: 55px;
+    white-space: nowrap;
+}
+
+.new_hero {
+    display: inline-block;
+    white-space: normal;
+
+    margin-top: 50px;
+    margin-left: 275px;
+    margin-right: 20px;
+
+    vertical-align: top;
+    text-align: center;
+    width: 550px;
+    height: 750px;
+
+    border-radius: 8px;
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.15);
+    background-color: white;
+}
+
+.add_inputs {
+    display: block;
+    padding: 10px;
+    margin: 20px auto;
+    text-align: center;
+    border: black 3px solid;
+    border-radius: 10px;
+    font-size: x-large;
+
+    width: 80%;
+}
+
+#check_box_place {
+    text-align: center;
+}
+
+#add_hero_checkbox {
+    width: 250px;
+}
+
+#fileloader {
+    display: block;
+}
+
+.adding_messages {
+    display: inline-block;
+    margin-top: 50px;
+
+
+    vertical-align: top;
+    text-align: center;
+    width: 350px;
+    height: 200px;
+
+    border-radius: 8px;
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.15);
+    background-color: white;
+}
+
+.message, .message_title {
+    display: block;
+}
+
+#hero_logo_text {
+    color: #767676;
 }
