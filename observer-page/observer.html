@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="styles/observer_style.css">
 </head>
 <body onload="onLoad()">
-<div class="topGrid_row">
-    <ul id="messages-list" class="messages" style="position: absolute;"></ul>
-</div>
 <header class="header" role="banner">
     <div class="header_field">
         <div class="navigation_bar header_content">
@@ -19,6 +16,9 @@
                 <a id="delete_btn" class="button" onclick="onDelete()">
                     <span>Delete the hero!</span>
                 </a>
+            </div>
+            <div class="search_field white_text button">
+                <input id="search" type="text" placeholder="Search superhero">
             </div>
             <div class="exit_group">
                 <a id="exit_btn" class="button" onclick="">
@@ -82,7 +82,7 @@
             <article id="card_1" class="card">
                 <div class="card_head">
                     <span class="card_name">Iron man</span>
-                    <a class="head_change_pencil"><img class="head_image" src="img/pencil.png"></a>
+                    <a class="head_change_pencil" onclick=""><img class="head_image" src="img/pencil.png"></a>
                 </div>
                 <div class="hero_image_href">
                     <!-- Open profile?-->
@@ -116,7 +116,7 @@
             <article id="card_2" class="card">
                 <div class="card_head">
                     <span class="card_name">Batman</span>
-                    <a class="head_change_pencil"><img class="head_image" src="img/pencil.png"></a>
+                    <a class="head_change_pencil" onclick=""><img class="head_image" src="img/pencil.png"></a>
                 </div>
                 <div class="hero_image_href">
                     <!-- Open profile?-->
@@ -152,37 +152,40 @@
 
 <div class="page_center_addhero">
     <div class="new_hero">
-        <form >
-            <input type="text" class="add_inputs" placeholder="Hero name" name="name">
+        <form action="scripts/createHero.js" name="createHero">
+            <label class="add_inputs">
+                <strong>Hero name</strong>
+                <input id="add_param_heroname" type="text" placeholder="Hero" name="name">
+            </label>
             <label class="add_inputs">
                 <strong id="hero_logo_text">Hero logo</strong>
                 <input id="fileloader" type="file" name="logo" accept="image/png">
             </label>
             <label class="add_inputs">
                 <strong>Universe</strong>
-                <input type="text" placeholder="Marvel" name="universe">
+                <input id="add_param_universe" type="text" placeholder="Marvel" name="universe">
             </label>
             <label class="add_inputs">
                 <strong>Power</strong>
-                <input type="number" placeholder="70" name="power" min="0" max="100">
+                <input id="add_param_power" type="number" placeholder="70" name="power" min="0" max="100">
             </label>
             <label class="add_inputs">
                 <strong>Desc</strong>
-                <input type="text" placeholder="Saved a world" name="desc">
+                <input id="add_param_desc" type="text" placeholder="Saved a world" name="desc">
             </label>
             <label class="add_inputs" id="check_box_place">
-                Alive
-                <input class="is_alive_input" id="add_hero_checkbox" type="checkbox" checked name="isalive">
+                <strong>Alive</strong>
+                <input class="is_alive_input" id="add_param_checkbox" type="checkbox" checked name="isalive">
             </label>
             <label class="add_inputs">
                 <strong>Phone</strong>
-                <input type="text" placeholder="900-900-999" name="phone">
+                <input id="add_param_phone" type="text" placeholder="8 800 555 3535" name="phone">
             </label>
         </form>
     </div>
     <div class="adding_messages">
-        <span class="message_title">Messages</span>
-        <span class="message">Need to add hero name</span>
+        <span id="message_title">Messages</span>
+        <span id="message"></span>
     </div>
 </div>
 
