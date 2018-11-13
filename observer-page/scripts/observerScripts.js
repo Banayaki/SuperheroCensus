@@ -4,6 +4,73 @@ function onLoad() {
     $("input:not(#search)").prop("disabled", true);
 }
 
+$("#name_sort").click(function () {
+    let names = [];
+    let cards = [];
+    $.each($(".card_name"), function () {
+        cards.push(this);
+        names.push($(this).text());
+    });
+
+    for (let index = names.length - 1; index > 0; --index) {
+        for (let in_index = 0; in_index < index; ++in_index) {
+            if (names[in_index] > names[in_index + 1]) {
+                let temp = names[in_index];
+                names[in_index] = names[in_index + 1];
+                names[in_index + 1] = temp;
+
+                temp = cards[in_index];
+                cards[in_index] = cards[in_index + 1];
+                cards[in_index + 1] = temp;
+
+                // $(cards[in_index]).closest(".grid_item_card").swap($(cards[in_index + 1]).closest(".grid_item_card"));
+                $(cards[in_index]).closest(".grid_item_card").swap($(cards[in_index + 1]).closest(".grid_item_card"));
+            }
+        }
+    }
+});
+
+jQuery.fn.swap = function(b) {
+    b = jQuery(b)[0];
+    var a = this[0],
+        a2 = a.cloneNode(true),
+        b2 = b.cloneNode(true),
+        stack = this;
+
+    a.parentNode.replaceChild(b2, a);
+    b.parentNode.replaceChild(a2, b);
+
+    stack[0] = a2;
+    return this.pushStack( stack );
+};
+
+$("#power_sort").click(function () {
+    let power_val = [];
+    let cards = [];
+    $.each($(".power_input"), function () {
+        cards.push(this);
+        power_val.push($(this).val());
+    });
+
+    for (let index = power_val.length - 1; index > 0; --index) {
+        for (let in_index = 0; in_index < index; ++in_index) {
+            if (power_val[in_index] < power_val[in_index + 1]) {
+                let temp = power_val[in_index];
+                power_val[in_index] = power_val[in_index + 1];
+                power_val[in_index + 1] = temp;
+
+                temp = cards[in_index];
+                cards[in_index] = cards[in_index + 1];
+                cards[in_index + 1] = temp;
+
+                // $(cards[in_index]).closest(".grid_item_card").swap($(cards[in_index + 1]).closest(".grid_item_card"));
+
+            }
+        }
+    }
+});
+
+
 $("#search").keyup(function () {
     let _this = this;
     $.each($(".card_name"), function () {
@@ -46,7 +113,7 @@ $("div").on('click', ".head_change_pencil", function () {
     // Ужасный поиск нужных инпутов.
     let input_tags = $(this).parent("div").siblings(".hero_desc").children("label").children("input");
     input_tags.toggleClass("editable_input");
-        input_tags.prop("disabled", false);
+    input_tags.prop("disabled", false);
 });
 
 $("div").on('click', ".grid_item_card", function () {
@@ -197,4 +264,13 @@ function create_new_card(id, name, file, universe, power, desc, isAlive, phone) 
         "            </article>\n" +
         "        </div>"
     );
+}
+
+function check_name(name) {
+    $.each($(".card_name"), function () {
+        if ($(this).text() === name) {
+            return false;
+        }
+    });
+    return true;
 }

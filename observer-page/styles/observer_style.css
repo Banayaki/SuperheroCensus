@@ -88,7 +88,7 @@ input {
     z-index: 1;
 }
 
-.left_btn_group {
+.left_btn_group, .sort_btns_group {
     display: inline-block;
     float: left;
 }
@@ -363,4 +363,5 @@ input {
 
 .search_field {
     padding: 12px;
+    float: left;
 }
