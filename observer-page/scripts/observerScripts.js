@@ -4,11 +4,41 @@ function onLoad() {
     $("input:not(#search)").prop("disabled", true);
 }
 
+
+$("#export_btn").click(function () {
+    let data = {};
+    $.each($(".grid_item_card"), function () {
+        let name = $(this).find(".card_name").text();
+        let image_path = $(this).find(".hero_image").attr("src");
+        let universe = $(this).find(".universe_input").val();
+        let power = $(this).find(".power_input").val();
+        let desc = $(this).find(".desc_input").val();
+        let is_alive = $(this).find(".is_alive_input").val();
+        let phone = $(this).find(".phone_input").val();
+        data[name] = {
+            "image_path": image_path,
+            "universe": universe,
+            "power": power,
+            "desc": desc,
+            "alive": is_alive,
+            "phone": phone
+        };
+    });
+    let json = JSON.stringify(data);
+    let type = 'data:application/octet-stream;base64, ';
+    let base = btoa(json);
+    let res = type + base;
+    document.getElementById("export_loader").href = res;
+    document.getElementById("export_loader").click();
+    // $("#export_loader").click();
+    // $("#export_loader").attr("href") = ;
+});
+
 $("#name_sort").click(function () {
     let names = [];
     let cards = [];
     $.each($(".card_name"), function () {
-        cards.push(this);
+        cards.push($(this).clone());
         names.push($(this).text());
     });
 
@@ -24,13 +54,14 @@ $("#name_sort").click(function () {
                 cards[in_index + 1] = temp;
 
                 // $(cards[in_index]).closest(".grid_item_card").swap($(cards[in_index + 1]).closest(".grid_item_card"));
-                $(cards[in_index]).closest(".grid_item_card").swap($(cards[in_index + 1]).closest(".grid_item_card"));
+                // Что тут происходит? Почему он не может нормально переставлять элементы
             }
         }
     }
+
 });
 
-jQuery.fn.swap = function(b) {
+jQuery.fn.swap = function (b) {
     b = jQuery(b)[0];
     var a = this[0],
         a2 = a.cloneNode(true),
@@ -41,14 +72,14 @@ jQuery.fn.swap = function(b) {
     b.parentNode.replaceChild(a2, b);
 
     stack[0] = a2;
-    return this.pushStack( stack );
+    return this.pushStack(stack);
 };
 
 $("#power_sort").click(function () {
     let power_val = [];
     let cards = [];
     $.each($(".power_input"), function () {
-        cards.push(this);
+        cards.push($(this));
         power_val.push($(this).val());
     });
 
@@ -62,9 +93,6 @@ $("#power_sort").click(function () {
                 temp = cards[in_index];
                 cards[in_index] = cards[in_index + 1];
                 cards[in_index + 1] = temp;
-
-                // $(cards[in_index]).closest(".grid_item_card").swap($(cards[in_index + 1]).closest(".grid_item_card"));
-
             }
         }
     }
@@ -216,22 +244,25 @@ $("#add_card_btn").click(function () {
     }
 
     if (message_box.text() === "" && heroname.length !== 0) {
-        if (!check_name(name)) {
+        if (!check_name(heroname)) {
             message_box.append("Hero with this name is exist<br><br>");
+        } else {
+            // Скачать картинку на сервер!
+            let filename = "img/unknown_hero.png";
+            let isalive = "checked" ? isAlive : false;
+            create_new_card(heroname, filename, universe, power, desc, isalive, phone);
+            $("#cancel_adding_btn").click();
+            setTimeout(function () {
+                clear_inputs()
+            }, 500);
         }
-        let new_id = "card_" + ($(".card").length + 1);
-        // Скачать картинку на сервер!
-        let filename = "img/unknown_hero.png";
-        let isalive = "checked" ? isAlive : false;
-        create_new_card(new_id, heroname, filename, universe, power, desc, isalive, phone);
-        $("#cancel_adding_btn").click();
     }
 });
 
-function create_new_card(id, name, file, universe, power, desc, isAlive, phone) {
+function create_new_card(name, file, universe, power, desc, isAlive, phone) {
     $("#new_hero_card").before(
         "<div class=\"grid_item_card\">\n" +
-        "            <article id=\"card_" + id + "\" class=\"card\">\n" +
+        "            <article id=\"" + id + "\" class=\"card\">\n" +
         "                <div class=\"card_head\">\n" +
         "                    <span class=\"card_name\">" + name + "</span>\n" +
         "                    <a class=\"head_change_pencil\" onclick=\"\"><img class=\"head_image\" src=\"img/pencil.png\"></a>\n" +
@@ -266,11 +297,26 @@ function create_new_card(id, name, file, universe, power, desc, isAlive, phone) 
     );
 }
 
+// Замыкание????
 function check_name(name) {
+    let isEq = true;
     $.each($(".card_name"), function () {
         if ($(this).text() === name) {
-            return false;
+            isEq = false;
+            return;
         }
     });
-    return true;
+    return isEq;
+}
+
+
+function clear_inputs() {
+    $("#message").prop('value', null);
+    $("#add_param_heroname").prop('value', null);
+    $("#fileloader").prop('value', null);
+    $("#add_param_universe").prop('value', null);
+    $("#add_param_power").prop('value', null);
+    $("#add_param_desc").prop('value', null);
+    $("#add_param_checkbox").prop('value', null);
+    $("#add_param_phone").prop('value', null);
 }

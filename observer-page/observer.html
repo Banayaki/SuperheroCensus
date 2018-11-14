@@ -28,9 +28,13 @@
                     <span>Sort by power</span>
                 </a>
             </div>
-            <div class="exit_group">
-                <a id="exit_btn" class="button" onclick="">
-                    <span>Leave</span>
+            <div class="import_export_group">
+                <a id="import_btn" class="button">
+                    <span>Import</span>
+                </a>
+                <a id="export_btn" class="button">
+                    <span>Export</span>
+                    <a download="data.json" id="export_loader" href='#'>
                 </a>
                 <img class="logo" src="img/logo.png">
             </div>
@@ -85,7 +89,7 @@
 </div>
 
 <div class="page_center">
-    <section class="grid_layout">
+    <section id="grid_layout">
         <div class="grid_item_card">
             <article id="card_1" class="card">
                 <div class="card_head">
