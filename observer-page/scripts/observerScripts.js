@@ -4,6 +4,47 @@ function onLoad() {
     $("input:not(#search)").prop("disabled", true);
 }
 
+$("#import_btn").click(function () {
+    $("#import_loader").prop("disabled", false);
+    document.getElementById("import_loader").click();
+});
+
+$("#import_loader").on('change', function () {
+    let json;
+    let fileReader = new FileReader();
+    let file = $("#import_loader").prop('files')[0];
+    fileReader.onload = function () {
+        json = JSON.parse(fileReader.result);
+        $(".grid_item_card").remove();
+        Object.keys(json).forEach(function (key, value) {
+            let heroname = key;
+            let values = json[key];
+            if (check_name(heroname)) {
+                let image_path = '';
+                let universe = '';
+                let power = '';
+                let desc = '';
+                let is_alive = '';
+                let phone = '';
+                for (key in values) {
+                    if (key === 'image_path') image_path = values[key];
+                    else if (key === 'universe') universe = values[key];
+                    else if (key === 'power') power = values[key];
+                    else if (key === 'desc') desc = values[key];
+                    else if (key === 'alive') is_alive = "checked" ? values[key] === 'on' : false;
+                    else if (key === 'phone') phone = values[key];
+                    else {
+                        return true;
+                    }
+                }
+                image_path = check_img(image_path);
+                create_new_card(heroname, image_path, universe, power, desc, is_alive, phone);
+            }
+        })
+    };
+    fileReader.readAsText(file);
+
+});
 
 $("#export_btn").click(function () {
     let data = {};
@@ -262,7 +303,7 @@ $("#add_card_btn").click(function () {
 function create_new_card(name, file, universe, power, desc, isAlive, phone) {
     $("#new_hero_card").before(
         "<div class=\"grid_item_card\">\n" +
-        "            <article id=\"" + id + "\" class=\"card\">\n" +
+        "            <article id=\"" + name + "\" class=\"card\">\n" +
         "                <div class=\"card_head\">\n" +
         "                    <span class=\"card_name\">" + name + "</span>\n" +
         "                    <a class=\"head_change_pencil\" onclick=\"\"><img class=\"head_image\" src=\"img/pencil.png\"></a>\n" +
@@ -309,6 +350,14 @@ function check_name(name) {
     return isEq;
 }
 
+function check_img(url) {
+    let img = new Image();
+    img.src = url;
+    if (img.height === 0) {
+        return 'img/unknown_hero.png';
+    }
+    return url;
+}
 
 function clear_inputs() {
     $("#message").prop('value', null);
