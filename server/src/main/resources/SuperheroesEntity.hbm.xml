@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="dbService.entity.SuperheroesEntity" table="SUPERHEROES" schema="SUPERHEROCENSUS">
+        <id name="heroId">
+            <column name="HERO_ID" sql-type="number(5)" precision="5"/>
+        </id>
+        <property name="heroName">
+            <column name="HERO_NAME" sql-type="varchar2(20)" length="20"/>
+        </property>
+        <property name="universe">
+            <column name="UNIVERSE" sql-type="varchar2(20)" length="20"/>
+        </property>
+        <property name="power">
+            <column name="POWER" sql-type="number(3)" precision="3"/>
+        </property>
+        <property name="description">
+            <column name="DESCRIPTION" sql-type="varchar2(2000)" length="2000" not-null="true"/>
+        </property>
+        <property name="isAlive">
+            <column name="IS_ALIVE" sql-type="char(1)" length="1" not-null="true"/>
+        </property>
+        <property name="imagePath">
+            <column name="IMAGE_PATH" sql-type="varchar2(60)" length="60" not-null="true"/>
+        </property>
+        <property name="phone">
+            <column name="PHONE" sql-type="varchar2(20)" length="20" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>
