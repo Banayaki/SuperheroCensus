@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="theme-color" content="#317EFB"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="Superhero, marvel, dc">
     <meta name="description" content="This is client-server application for register superheroes">
     <title>Superhero Census - Observer</title>
     <link rel="stylesheet" href="styles/observer_style.css">
+    <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body onload="onLoad()">
-<header class="header" role="banner">
+<header class="header">
     <div class="header_field">
         <div class="navigation_bar header_content">
             <div class="left_btn_group">
@@ -29,15 +32,16 @@
                 </a>
             </div>
             <div class="import_export_group">
+                <!-- Because <<The element input must not appear as a descendant of the a element.>> -->
+                <input type="file" id="import_loader" accept="image/png, image/jpeg" style="display: none">
                 <a id="import_btn" class="button">
                     <span>Import</span>
-                    <input type="file" id="import_loader" accept="image/png, image/jpeg" style="display: none">
                 </a>
                 <a id="export_btn" class="button">
                     <span>Export</span>
-                    <a download="data.json" id="export_loader" href='#'>
+                    <a download="data.json" id="export_loader" href='#'></a>
                 </a>
-                <img class="logo" src="img/logo.png">
+                <img class="logo" alt="Superhero Logo" src="img/logo.png">
             </div>
         </div>
         <div class="add_mode header_content">
@@ -90,16 +94,17 @@
 </div>
 
 <div class="page_center">
-    <section id="grid_layout">
+    <section id="grid">
         <div class="grid_item_card">
-            <article id="card_1" class="card">
+            <article id="Iron man" class="card">
                 <div class="card_head">
                     <span class="card_name">Iron man</span>
-                    <a class="head_change_pencil" onclick=""><img class="head_image" src="img/pencil.png"></a>
+                    <a class="head_change_pencil" onclick="">
+                        <img class="head_image" alt="ChangeCardIcon" src="img/pencil.png">
+                    </a>
                 </div>
                 <div class="hero_image_href">
-                    <!-- Open profile?-->
-                    <img class="hero_image" alt="Iron Man" src="img/Iron_Man_icon.png">
+                    <img class="hero_image" alt="Iron Man" src="img/Iron%20Man.png">
                 </div>
                 <div class="hero_desc">
                     <label>
@@ -126,14 +131,15 @@
             </article>
         </div>
         <div class="grid_item_card">
-            <article id="card_2" class="card">
+            <article id="Batman" class="card">
                 <div class="card_head">
                     <span class="card_name">Batman</span>
-                    <a class="head_change_pencil" onclick=""><img class="head_image" src="img/pencil.png"></a>
+                    <a class="head_change_pencil" onclick="">
+                        <img class="head_image" alt="ChangeCardIcon" src="img/pencil.png">
+                    </a>
                 </div>
                 <div class="hero_image_href">
-                    <!-- Open profile?-->
-                    <img class="hero_image" alt="Batman" src="img/Batman_icon.png">
+                    <img class="hero_image" alt="Batman" src="img/Batman.png">
                 </div>
                 <div class="hero_desc">
                     <label>
@@ -159,7 +165,9 @@
                 </div>
             </article>
         </div>
-        <a id="new_hero_card" onclick="onAddHero()"><img id="new_hero_card_image" src="img/New_hero_card.png"></a>
+        <a id="new_hero_card" onclick="onAddHero()">
+            <img id="new_hero_card_image" alt="Unknown hero image" src="img/New_hero_card.png">
+        </a>
     </section>
 </div>
 
