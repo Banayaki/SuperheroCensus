@@ -31,34 +31,58 @@ public class SessionExecutor implements UserDAO {
         SuperheroesEntity hero;
         try (Session session = sessionBuider.openNewSession()) {
             hero = (SuperheroesEntity) session
-                    .createNativeQuery("SELECT * FROM SUPERHEROCENSUS.SUPERHEROES h WHERE h.HERO_NAME = " + name)
+                    .createQuery("select h from SuperheroesEntity h where h.heroName like :name")
+                    .setParameter("name", name)
                     .getSingleResult();
         }
         return hero;
     }
 
+    @SuppressWarnings("Duplicates")
     public void addNewHero(SuperheroesEntity hero) throws SQLException {
+        Transaction tx = null;
         try (Session session = sessionBuider.openNewSession()) {
-            Transaction transaction = session.beginTransaction();
+            tx = session.beginTransaction();
+            session.save(hero);
+            session.flush();
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            if (tx != null) tx.rollback();
         }
 
     }
 
     public void deleteHero(SuperheroesEntity hero) throws SQLException {
+        Transaction tx = null;
         try (Session session = sessionBuider.openNewSession()) {
-            Transaction transaction = session.beginTransaction();
+            tx = session.beginTransaction();
+            session.delete(hero);
+            session.flush();
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            if (tx != null) tx.rollback();
         }
 
     }
 
+    @SuppressWarnings("Duplicates")
     public void changeHero(SuperheroesEntity hero) throws SQLException {
+        Transaction tx = null;
         try (Session session = sessionBuider.openNewSession()) {
-            Transaction transaction = session.beginTransaction();
+            tx = session.beginTransaction();
+            session.update(hero);
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx != null) tx.rollback();
+            ex.printStackTrace();
         }
+
 
     }
 
-    public List getTable() throws SQLException {
+    public List getHeroesList() throws SQLException {
         List list = null;
         try (Session session = sessionBuider.openNewSession()) {
             list = session.createQuery("FROM SuperheroesEntity ").list();

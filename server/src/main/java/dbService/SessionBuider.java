@@ -7,11 +7,11 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 public class SessionBuider {
-    private static SessionBuider ourInstance = new SessionBuider();
+    private static SessionBuider instance = new SessionBuider();
     private final SessionFactory sessionFactory;
 
     public static SessionBuider getInstance() {
-        return ourInstance;
+        return instance;
     }
 
     private SessionBuider() {

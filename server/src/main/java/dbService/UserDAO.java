@@ -19,5 +19,5 @@ public interface UserDAO {
 
     void changeHero(SuperheroesEntity hero) throws SQLException;
 
-    List getTable() throws SQLException;
+    List getHeroesList() throws SQLException;
 }

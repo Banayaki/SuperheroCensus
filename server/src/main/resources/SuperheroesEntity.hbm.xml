@@ -6,28 +6,28 @@
 
     <class name="dbService.entity.SuperheroesEntity" table="SUPERHEROES" schema="SUPERHEROCENSUS">
         <id name="heroId">
-            <column name="HERO_ID" sql-type="number(5)" precision="5"/>
+            <column name="HERO_ID" sql-type="number(5)" precision="5" not-null="true"/>
         </id>
         <property name="heroName">
-            <column name="HERO_NAME" sql-type="varchar2(20)" length="20"/>
+            <column name="HERO_NAME" sql-type="varchar2(20)" length="20" not-null="true"/>
         </property>
         <property name="universe">
-            <column name="UNIVERSE" sql-type="varchar2(20)" length="20"/>
+            <column name="UNIVERSE" sql-type="varchar2(20)" length="20" not-null="true"/>
         </property>
         <property name="power">
-            <column name="POWER" sql-type="number(3)" precision="3"/>
+            <column name="POWER" sql-type="number(3)" precision="3" not-null="true"/>
         </property>
         <property name="description">
-            <column name="DESCRIPTION" sql-type="varchar2(2000)" length="2000" not-null="true"/>
+            <column name="DESCRIPTION" sql-type="varchar2(2000)" length="2000" />
         </property>
         <property name="isAlive">
-            <column name="IS_ALIVE" sql-type="char(1)" length="1" not-null="true"/>
+            <column name="IS_ALIVE" sql-type="char(1)" length="1" />
         </property>
         <property name="imagePath">
-            <column name="IMAGE_PATH" sql-type="varchar2(60)" length="60" not-null="true"/>
+            <column name="IMAGE_PATH" sql-type="varchar2(60)" length="60" />
         </property>
         <property name="phone">
-            <column name="PHONE" sql-type="varchar2(20)" length="20" not-null="true"/>
+            <column name="PHONE" sql-type="varchar2(20)" length="20" />
         </property>
     </class>
 </hibernate-mapping>
