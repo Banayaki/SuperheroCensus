@@ -4,6 +4,7 @@ import dbService.entity.SuperheroesEntity;
 
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public interface UserDAO {
@@ -18,5 +19,5 @@ public interface UserDAO {
 
     void changeHero(SuperheroesEntity hero) throws SQLException;
 
-    Set<SuperheroesEntity> getTable() throws SQLException;
+    List getTable() throws SQLException;
 }

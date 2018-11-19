@@ -5,11 +5,11 @@
 <hibernate-configuration>
     <session-factory>
         <!--TODO check this properties on release-->
+        <property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
         <property name="connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
         <property name="connection.username">SYSTEM</property>
         <property name="connection.password">0102</property>
-        <property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
-        <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
+        <property name="dialect">org.hibernate.dialect.OracleDialect</property>
         <property name="default_schema">SUPERHEROCENSUS</property>
         <property name="show_sql">true</property>
         <property name="hbm2ddl.auto">validate</property>
