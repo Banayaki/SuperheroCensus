@@ -4,14 +4,14 @@ let changed_card;
 // Копия изменяемой карты до изменений
 let backup;
 
-// Запрещает использование
 function onLoad() {
     $("input:not(#search)").prop("disabled", true);
     $.ajax({
         type: 'POST',
         url: 'load',
         success: function (response) {
-            alert(response);
+            json = JSON.parse(response);
+            load_card_from_json(json);
         },
         error: function (response) {
             alert("server shutdown");
@@ -34,37 +34,41 @@ $("#import_loader").on('change', function () {
         fileReader.onload = function () {
             // noinspection JSCheckFunctionSignatures
             json = JSON.parse(fileReader.result);
-            $(".grid_item_card").remove();
-            Object.keys(json).forEach(function (key) {
-                let heroname = key;
-                let values = json[key];
-                if (check_name(heroname)) {
-                    let image_path = '';
-                    let universe = '';
-                    let power = '';
-                    let desc = '';
-                    let is_alive = '';
-                    let phone = '';
-                    for (key in values) {
-                        if (key === 'image_path') image_path = values[key];
-                        else if (key === 'universe') universe = values[key];
-                        else if (key === 'power') power = values[key];
-                        else if (key === 'desc') desc = values[key];
-                        else if (key === 'alive') is_alive = "checked" ? values[key] === 'on' : false;
-                        else if (key === 'phone') phone = values[key];
-                        else {
-                            return true;
-                        }
-                    }
-                    image_path = check_img(image_path);
-                    create_new_card(heroname, image_path, universe, power, desc, is_alive, phone);
-                    $("input:not(#search)").prop("disabled", true);
-                }
-            })
+            load_card_from_json(json);
         };
         fileReader.readAsText(file);
     }
 });
+
+function load_card_from_json(json) {
+    $(".grid_item_card").remove();
+    Object.keys(json).forEach(function (key) {
+        let heroname = key;
+        let values = json[key];
+        if (check_name(heroname)) {
+            let image_path = '';
+            let universe = '';
+            let power = '';
+            let desc = '';
+            let is_alive = '';
+            let phone = '';
+            for (key in values) {
+                if (key === 'image_path') image_path = values[key];
+                else if (key === 'universe') universe = values[key];
+                else if (key === 'power') power = values[key];
+                else if (key === 'desc') desc = values[key];
+                else if (key === 'alive') is_alive = "checked" ? values[key] === 'on' : false;
+                else if (key === 'phone') phone = values[key];
+                else {
+                    return true;
+                }
+            }
+            image_path = check_img(image_path);
+            create_new_card(heroname, image_path, universe, power, desc, is_alive, phone);
+            $("input:not(#search)").prop("disabled", true);
+        }
+    })
+}
 
 $("#export_btn").click(function () {
     let data = {};
@@ -376,11 +380,12 @@ function check_name(name) {
 }
 
 function check_img(url) {
+    url.replace("\\", "");
     let img = new Image();
     img.src = url;
-    if (img.height === 0) {
-        return 'img/unknown_hero.png';
-    }
+    img.onerror = function () {
+        url = 'img/unknown_hero.png';
+    };
     return url;
 }
 
