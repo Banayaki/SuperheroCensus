@@ -91,4 +91,8 @@ public class SessionExecutor implements UserDAO {
         }
         return list;
     }
+
+    public void destroy() {
+        sessionIdFactory.decrementAndGet();
+    }
 }

@@ -7,6 +7,16 @@ let backup;
 // Запрещает использование
 function onLoad() {
     $("input:not(#search)").prop("disabled", true);
+    $.ajax({
+        type: 'POST',
+        url: 'load',
+        success: function (response) {
+            alert(response);
+        },
+        error: function (response) {
+            alert("server shutdown");
+        }
+    });
 }
 
 // Событие клика на кнопку импорта. Открывает диалоговое окно клиенту, что бы тот отправил файл (json)
