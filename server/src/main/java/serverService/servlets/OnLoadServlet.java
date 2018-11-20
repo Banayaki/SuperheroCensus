@@ -26,7 +26,7 @@ public class OnLoadServlet extends HttpServlet {
             e.printStackTrace();
         }
         JSONObject json = new JSONObject();
-        for (Object entity: heroes) {
+        for (Object entity : heroes) {
             SuperheroesEntity hero = (SuperheroesEntity) entity;
             JSONObject hero_obj = new JSONObject();
 
@@ -40,7 +40,6 @@ public class OnLoadServlet extends HttpServlet {
 
             json.put(hero.getHeroName(), hero_obj);
         }
-        resp.getWriter().write("{isSuccess: true}");
-        resp.getWriter().write("{data: " + json.toJSONString() + " }");
+        resp.getWriter().write(json.toJSONString());
     }
 }
