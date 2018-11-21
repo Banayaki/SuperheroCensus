@@ -57,7 +57,7 @@ function load_card_from_json(json) {
                 else if (key === 'universe') universe = values[key];
                 else if (key === 'power') power = values[key];
                 else if (key === 'desc') desc = values[key];
-                else if (key === 'alive') is_alive = "checked" ? values[key] === 'on' : false;
+                else if (key === 'alive') is_alive = "checked" ? values[key] === 'Y' : false;
                 else if (key === 'phone') phone = values[key];
                 else {
                     return true;
@@ -312,13 +312,18 @@ $("#add_card_btn").click(function () {
             message_box.append("Hero with this name is exist<br><br>");
         } else {
             // Скачать картинку на сервер!
-            if (file.name !== "") {
-
+            let image_path;
+            if (file != null && file.name !== "") {
+                image_path = check_img(file.name);
+            } else {
+                image_path = 'img/unknown_hero.png'
             }
 
-            let filename = "img/unknown_hero.png";
-            let isalive = "checked" ? isAlive : "";
-            create_new_card(heroname, filename, universe, power, desc, isalive, phone);
+
+            let is_alive_checkbox = "checked" ? isAlive : false;
+            let is_alive_param = "Y" ? isAlive : "N";
+            create_new_card(heroname, image_path, universe, power, desc, is_alive_checkbox, phone);
+            load_card_on_server(heroname, image_path, universe, power, desc, is_alive_param, phone);
             $("#cancel_adding_btn").click();
             setTimeout(function () {
                 clear_inputs()
@@ -398,4 +403,31 @@ function clear_inputs() {
     $("#add_param_desc").prop('value', null);
     $("#add_param_checkbox").prop('value', null);
     $("#add_param_phone").prop('value', null);
+}
+
+function load_card_on_server(heroname, image_path, universe, power, desc, isalive, phone) {
+    let hero_data = {
+        "heroname": heroname,
+        "image_path": image_path,
+        "universe": universe,
+        "power": power,
+        "desc": desc,
+        "alive": isalive,
+        "phone": phone
+    };
+
+    let json = JSON.stringify(hero_data);
+    $.ajax({
+        method: 'POST',
+        url: 'newHero',
+        data: json,
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+            console.log("Loading finish success!")
+        },
+        error: function (response) {
+            console.log("Loading failed :C")
+        }
+    });
 }
