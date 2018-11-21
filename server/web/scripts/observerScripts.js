@@ -57,7 +57,7 @@ function load_card_from_json(json) {
                 else if (key === 'universe') universe = values[key];
                 else if (key === 'power') power = values[key];
                 else if (key === 'desc') desc = values[key];
-                else if (key === 'alive') is_alive = "checked" ? values[key] === 'Y' : false;
+                else if (key === 'alive') values[key] === 'Y' ? is_alive = "checked" : false;
                 else if (key === 'phone') phone = values[key];
                 else {
                     return true;
@@ -85,7 +85,7 @@ $("#export_btn").click(function () {
             "universe": universe,
             "power": power,
             "desc": desc,
-            "alive": is_alive,
+            "alive": is_alive === "on" ? "checked" : false,
             "phone": phone
         };
     });
@@ -268,7 +268,45 @@ $('#delete_selected').click(function () {
     $('.modal_dialog').show();
 });
 
+function delete_cards_from_server() {
+    let deleted_cards = {};
+    $.each($(".choosed_for_delete"), function () {
+        console.log("ssss");
+        let name = $(this).find(".card_name").text();
+        let image_path = $(this).find(".hero_image").attr("src");
+        let universe = $(this).find(".universe_input").val();
+        let power = $(this).find(".power_input").val();
+        let desc = $(this).find(".desc_input").val();
+        let is_alive = $(this).find(".is_alive_input").val();
+        let phone = $(this).find(".phone_input").val();
+        deleted_cards[name] = {
+            "image_path": image_path,
+            "universe": universe,
+            "power": power,
+            "desc": desc,
+            "alive": is_alive === "on" ? "checked" : false,
+            "phone": phone
+        };
+    });
+
+    let json = JSON.stringify(deleted_cards);
+    $.ajax({
+        method: 'POST',
+        url: 'deleteHero',
+        data: json,
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function () {
+            console.log("Delete finish success!")
+        },
+        error: function () {
+            console.log("delete failed :C")
+        }
+    });
+}
+
 $("#dialog_accept").click(function () {
+    delete_cards_from_server();
     $(".choosed_for_delete").remove();
     $("#dialog_cancel").click();
     $("#cancel_delete_btn").click();
@@ -319,9 +357,10 @@ $("#add_card_btn").click(function () {
                 image_path = 'img/unknown_hero.png'
             }
 
-
-            let is_alive_checkbox = "checked" ? isAlive : false;
-            let is_alive_param = "Y" ? isAlive : "N";
+            let is_alive_checkbox;
+            let is_alive_param;
+            isAlive === "on"  ? is_alive_checkbox = "checked" : false;
+            isAlive === "on"  ? is_alive_param = "Y" : is_alive_param = "N";
             create_new_card(heroname, image_path, universe, power, desc, is_alive_checkbox, phone);
             load_card_on_server(heroname, image_path, universe, power, desc, is_alive_param, phone);
             $("#cancel_adding_btn").click();

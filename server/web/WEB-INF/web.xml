@@ -15,6 +15,26 @@
         <servlet-class>serverService.servlets.OnLoadServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>DeleteHeroServlet</servlet-name>
+        <servlet-class>serverService.servlets.DeleteHeroServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ChangeHeroServlet</servlet-name>
+        <servlet-class>serverService.servlets.ChangeHeroServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ChangeHeroServlet</servlet-name>
+        <url-pattern>/changeHero</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DeleteHeroServlet</servlet-name>
+        <url-pattern>/deleteHero</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>NewHeroServlet</servlet-name>
         <url-pattern>/newHero</url-pattern>
