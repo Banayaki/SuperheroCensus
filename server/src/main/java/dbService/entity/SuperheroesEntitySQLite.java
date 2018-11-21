@@ -5,8 +5,8 @@ import java.io.Serializable;
 
 @SuppressWarnings("DefaultAnnotationParam")
 @Entity
-@Table(name = "SUPERHEROES", schema = "SUPERHEROCENSUS")
-public class SuperheroesEntity implements Serializable {
+@Table(name = "SUPERHEROES")
+public class SuperheroesEntitySQLite extends AbstractHeroEntity implements Serializable {
     private short heroId;
     private String heroName;
     private String universe;
@@ -16,12 +16,12 @@ public class SuperheroesEntity implements Serializable {
     private String imagePath;
     private String phone;
 
-    public SuperheroesEntity() {
+    public SuperheroesEntitySQLite() {
 
     }
 
-    public SuperheroesEntity(short heroId, String heroName, String universe, byte power, String description,
-                             String isAlive, String imagePath, String phone) {
+    public SuperheroesEntitySQLite(short heroId, String heroName, String universe, byte power, String description,
+                                   String isAlive, String imagePath, String phone) {
         this.heroId = heroId;
         this.heroName = heroName;
         this.universe = universe;
@@ -33,81 +33,97 @@ public class SuperheroesEntity implements Serializable {
     }
 
     @Id
-    @Column(name = "HERO_ID", nullable = false, precision = 0)
+    @Column(name = "HERO_ID", nullable = false)
+    @Override
     public short getHeroId() {
         return heroId;
     }
 
+    @Override
     public void setHeroId(short heroId) {
         this.heroId = heroId;
     }
 
     @Basic
-    @Column(name = "HERO_NAME", nullable = false, length = 20)
+    @Column(name = "HERO_NAME", nullable = false)
+    @Override
     public String getHeroName() {
         return heroName;
     }
 
+    @Override
     public void setHeroName(String heroName) {
         this.heroName = heroName;
     }
 
     @Basic
-    @Column(name = "UNIVERSE", nullable = false, length = 20)
+    @Column(name = "UNIVERSE", nullable = false)
+    @Override
     public String getUniverse() {
         return universe;
     }
 
+    @Override
     public void setUniverse(String universe) {
         this.universe = universe;
     }
 
     @Basic
-    @Column(name = "POWER", nullable = false, precision = 0)
+    @Column(name = "POWER", nullable = false)
+    @Override
     public byte getPower() {
         return power;
     }
 
+    @Override
     public void setPower(byte power) {
         this.power = power;
     }
 
     @Basic
-    @Column(name = "DESCRIPTION", nullable = true, length = 2000)
+    @Column(name = "DESCRIPTION", nullable = true)
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
     @Basic
-    @Column(name = "IS_ALIVE", nullable = true, length = 1)
+    @Column(name = "IS_ALIVE", nullable = false)
+    @Override
     public String getIsAlive() {
         return isAlive;
     }
 
+    @Override
     public void setIsAlive(String isAlive) {
         this.isAlive = isAlive;
     }
 
     @Basic
-    @Column(name = "IMAGE_PATH", nullable = true, length = 60)
+    @Column(name = "IMAGE_PATH", nullable = true)
+    @Override
     public String getImagePath() {
         return imagePath;
     }
 
+    @Override
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
     @Basic
-    @Column(name = "PHONE", nullable = true, length = 20)
+    @Column(name = "PHONE", nullable = true)
+    @Override
     public String getPhone() {
         return phone;
     }
 
+    @Override
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -118,7 +134,7 @@ public class SuperheroesEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SuperheroesEntity that = (SuperheroesEntity) o;
+        SuperheroesEntitySQLite that = (SuperheroesEntitySQLite) o;
 
         if (heroId != that.heroId) return false;
         if (power != that.power) return false;

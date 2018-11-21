@@ -1,23 +1,20 @@
 package dbService;
 
-import dbService.entity.SuperheroesEntity;
+import dbService.entity.AbstractHeroEntity;
+import dbService.entity.SuperheroesEntityOracle;
 
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public interface UserDAO {
 
-    SuperheroesEntity getById(short id) throws SQLException;
+    AbstractHeroEntity getByName(String name) throws SQLException;
 
-    SuperheroesEntity getByName(String name) throws SQLException;
+    void addNewHero(AbstractHeroEntity hero) throws SQLException;
 
-    void addNewHero(SuperheroesEntity hero) throws SQLException;
+    void deleteHero(AbstractHeroEntity hero) throws SQLException;
 
-    void deleteHero(SuperheroesEntity hero) throws SQLException;
-
-    void changeHero(SuperheroesEntity hero) throws SQLException;
+    void changeHero(AbstractHeroEntity hero) throws SQLException;
 
     List getHeroesList() throws SQLException;
 }

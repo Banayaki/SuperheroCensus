@@ -1,7 +1,7 @@
 package serverService.servlets;
 
 import dbService.SessionExecutor;
-import dbService.entity.SuperheroesEntity;
+import dbService.entity.SuperheroesEntityOracle;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
@@ -27,7 +27,7 @@ public class OnLoadServlet extends HttpServlet {
         }
         JSONObject json = new JSONObject();
         for (Object entity : heroes) {
-            SuperheroesEntity hero = (SuperheroesEntity) entity;
+            SuperheroesEntityOracle hero = (SuperheroesEntityOracle) entity;
             JSONObject hero_obj = new JSONObject();
 
             // TODO сделать это симпотичнее

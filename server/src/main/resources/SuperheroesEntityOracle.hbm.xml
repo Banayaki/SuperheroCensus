@@ -4,7 +4,7 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-    <class name="dbService.entity.SuperheroesEntity" table="SUPERHEROES" schema="SUPERHEROCENSUS">
+    <class name="dbService.entity.SuperheroesEntityOracle" table="SUPERHEROES">
         <id name="heroId">
             <column name="HERO_ID" sql-type="number(5)" precision="5" not-null="true"/>
         </id>
