@@ -1,6 +1,7 @@
 package serverService.servlets;
 
 import dbService.SessionExecutor;
+import dbService.entity.AbstractHeroEntity;
 import dbService.entity.SuperheroesEntityOracle;
 import org.json.simple.JSONObject;
 
@@ -18,7 +19,6 @@ public class OnLoadServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         SessionExecutor executor = new SessionExecutor();
-        System.out.println("adasddas");
         List heroes = null;
         try {
             heroes = executor.getHeroesList();
@@ -27,7 +27,7 @@ public class OnLoadServlet extends HttpServlet {
         }
         JSONObject json = new JSONObject();
         for (Object entity : heroes) {
-            SuperheroesEntityOracle hero = (SuperheroesEntityOracle) entity;
+            AbstractHeroEntity hero = (AbstractHeroEntity) entity;
             JSONObject hero_obj = new JSONObject();
 
             // TODO сделать это симпотичнее
