@@ -12,6 +12,8 @@ function onLoad() {
         success: function (response) {
             json = JSON.parse(response);
             load_card_from_json(json);
+            $("#preloader").fadeOut(1000);
+            $(".header").fadeIn(1000);
         },
         error: function (response) {
             alert("server shutdown");
