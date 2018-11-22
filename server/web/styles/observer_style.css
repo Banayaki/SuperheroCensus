@@ -242,7 +242,7 @@ input {
 #new_hero_card:hover {
     display: inline-block;
     margin: 16px;
-    height: 406px;
+    height: 419px;
     width: 250px;
 
     border-radius: 8px;
@@ -251,7 +251,7 @@ input {
     transition: background-color 0.4s ease-in;
     /*transition: opacity 0.4s ease-in;*/
 
-    background-color: #35373b70;
+    background-color: white;
     box-shadow: 4px 4px 18px 0 rgba(0, 0, 0, 0.11);
 }
 
@@ -261,11 +261,21 @@ input {
     height: 419px;
     width: 250px;
 
+    text-align: center;
+
     opacity: 0.8;
 
+    background-color: #888b8f;
     border-radius: 8px;
     box-shadow: 4px 4px 18px 0 rgba(0, 0, 0, 0.11);
+}
 
+#new_card_image {
+    position: relative;
+    top: 18%;
+    font-size: 250px;
+    color: #46484d;
+    z-index: 1;
 }
 
 #new_hero_card_image {

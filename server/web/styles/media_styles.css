@@ -1,0 +1,5 @@
+@media screen and (max-device-width: 1265px) {
+    .header_content {
+        display: none;
+    }
+}
