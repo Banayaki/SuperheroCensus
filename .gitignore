@@ -26,3 +26,6 @@ hs_err_pid*
 
 # Not needed
 out/*
+tomcat/logs
+tomcat/temp
+tomcat/webapps/docs
