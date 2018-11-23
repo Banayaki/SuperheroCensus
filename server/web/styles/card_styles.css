@@ -1,0 +1,55 @@
+.overturned {
+    perspective: 600px;
+}
+
+.grid_item_card {
+    margin: 1em;
+    display: inline-block;
+    vertical-align: top;
+    width: 250px;
+    height: 419px;
+}
+
+.flipper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+
+    transform-style: preserve-3d;
+    transform-origin: center;
+    transition: transform 0.8s;
+
+
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.15);
+}
+
+.flipper.is_flipped {
+    /*transform: translateX(-100%) rotateY(-180deg);*/
+}
+
+.front, .back {
+    position: absolute;
+    padding: 1em;
+
+    text-align: center;
+    font-weight: bold;
+    backface-visibility: hidden;
+}
+
+.back {
+    transform: rotateY(180deg);
+}
+
+.overturned:hover .flipper {
+    transform: rotateY(-180deg);
+}
+
+.front {
+    position: absolute;
+    backface-visibility: hidden;
+}
+
+

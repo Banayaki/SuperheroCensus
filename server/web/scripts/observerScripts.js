@@ -4,6 +4,13 @@ let changed_card;
 // Копия изменяемой карты до изменений
 let backup;
 
+
+var card = document.querySelector('.card');
+card.addEventListener( 'click', function() {
+    card.classList.toggle('is-flipped');
+});
+
+
 function onLoad() {
     $("input:not(#search)").prop("disabled", true);
     $.ajax({

@@ -97,22 +97,7 @@ input {
     z-index: auto;
 }
 
-.grid_item_card {
-    padding: 1em;
-    margin: 1em;
 
-    display: inline-block;
-    vertical-align: top;
-    width: 250px;
-
-    border-radius: 8px;
-    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.15);
-    background-color: white;
-}
-
-.grid_item_card:hover {
-    box-shadow: 0 0 0 128px rgba(0, 0, 0, 0.22) inset;
-}
 
 .grid_item_card:active {
     box-shadow: 0 0 0 128px rgba(0, 0, 0, 0.33) inset;
