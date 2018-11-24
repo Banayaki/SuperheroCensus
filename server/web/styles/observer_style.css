@@ -98,71 +98,6 @@ input {
 }
 
 
-
-.grid_item_card:active {
-    box-shadow: 0 0 0 128px rgba(0, 0, 0, 0.33) inset;
-}
-
-.card_head {
-    display: block;
-    height: 20px;
-}
-
-.card_name {
-    display: inline-block;
-    font-size: x-large;
-    float: left;
-}
-
-.head_image {
-    display: inline-block;
-
-    width: 20px;
-    height: 20px;
-    float: right;
-}
-
-.hero_desc > label {
-    padding: 0;
-    height: 25px;
-    margin-bottom: 3px;
-    display: block;
-}
-
-.hero_desc > label > strong {
-    display: inline;
-
-    width: 60px;
-    height: 25px;
-    padding-top: 5px;
-    text-align: center;
-    vertical-align: middle;
-    float: left;
-}
-
-.hero_desc > label > input {
-    width: 150px;
-    height: 25px;
-    vertical-align: middle;
-    float: right;
-
-}
-
-.hero_image {
-    width: 100%;
-    height: 100%;
-}
-
-.card_name, .hero_desc > * {
-    font-weight: bold;
-}
-
-.hero_desc > label {
-    display: block;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
 .button {
     display: inline-block;
 
@@ -177,10 +112,6 @@ input {
 
 .button:hover {
     background-color: #636569;
-}
-
-.choosed_for_delete {
-    box-shadow: 0 0 0 128px rgba(0, 0, 0, 0.33) inset;
 }
 
 .hide_animation {
@@ -213,11 +144,6 @@ input {
 
     color: white;
     font-weight: bold;
-}
-
-.editable_input {
-    background-color: white;
-    border: 1px solid black;
 }
 
 .is_alive_input {

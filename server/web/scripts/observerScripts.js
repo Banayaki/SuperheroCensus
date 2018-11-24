@@ -5,11 +5,11 @@ let changed_card;
 let backup;
 
 
-var card = document.querySelector('.card');
-card.addEventListener( 'click', function() {
-    card.classList.toggle('is-flipped');
+$(".overturned").on("click", ".card", function (event) {
+    if ($(event.target).attr('class') !== "head_image") {
+        $(this).toggleClass("flip");
+    }
 });
-
 
 function onLoad() {
     $("input:not(#search)").prop("disabled", true);
@@ -195,7 +195,7 @@ function onAddHero() {
 }
 
 // noinspection JSJQueryEfficiency
-$("div").on('click', ".head_change_pencil", function () {
+$("div").on('click', ".head_change_pencil", function (event) {
     $(".navigation_bar").fadeOut(400, function () {
         $(".change_mode").fadeIn(400)
     });
@@ -203,21 +203,15 @@ $("div").on('click', ".head_change_pencil", function () {
     $("#new_hero_card").fadeOut(400);
 
     $(".head_change_pencil").hide();
-    let input_tags = $(this).parent("div").siblings(".hero_desc").find("input");
+    let input_tags = $(this).parents(".card").find("input");
 
-    backup = $(this).parent("div").siblings(".hero_desc").clone();
-    changed_card = $(this).parent("div").siblings(".hero_desc");
+    backup = $(this).parents(".flipper").clone();
+    changed_card = $(this).parents(".card");
 
-    input_tags.toggleClass("editable_input");
     input_tags.prop("disabled", false);
-});
+    input_tags.toggleClass("editable_input");
 
-// noinspection JSJQueryEfficiency
-$("div").on('click', ".grid_item_card", function () {
-    // Избегаем двойного клика
-    if (isDeleteMode) {
-        $(this).toggleClass("choosed_for_delete");
-    }
+    event.stopPropagation();
 });
 
 $("#cancel_adding_btn").click(function () {

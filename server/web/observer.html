@@ -107,7 +107,7 @@
 
 <div class="page_center">
     <section id="grid">
-        <div class="grid_item_card  overturned">
+        <div class="grid_item_card  overturned draggable">
             <article id="Iron man" class="card flipper">
                 <div class="front">
                     <div class="card_head">
@@ -117,7 +117,7 @@
                         </a>
                     </div>
                     <div class="hero_image_href">
-                        <img class="hero_image" alt="Iron Man" src="img/Iron Man.png">
+                        <img class="hero_image" alt="Iron Man" src="img/Iron Man.png" draggable="false">
                     </div>
                     <div class="hero_desc">
                         <label>
@@ -191,8 +191,13 @@
     </div>
 </div>
 
+<div class="trash">
+    <img src="img/Doctor Strange.png">
+</div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
 <script src="scripts/observerScripts.js"></script>
+<script src="scripts/deleteScripts.js"></script>
 </body>
 </html>

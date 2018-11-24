@@ -10,15 +10,11 @@
     height: 419px;
 }
 
-.flipper {
+.card {
     position: relative;
     width: 100%;
     height: 100%;
     cursor: pointer;
-
-    transform-style: preserve-3d;
-    transform-origin: center;
-    transition: transform 0.8s;
 
 
     background-color: white;
@@ -26,8 +22,14 @@
     box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.15);
 }
 
+.flipper {
+    transform-style: preserve-3d;
+    transform-origin: center;
+    transition: transform 0.8s;
+}
+
 .flipper.is_flipped {
-    /*transform: translateX(-100%) rotateY(-180deg);*/
+    transform: translateX(-100%) rotateY(-180deg);
 }
 
 .front, .back {
@@ -43,7 +45,7 @@
     transform: rotateY(180deg);
 }
 
-.overturned:hover .flipper {
+.flip {
     transform: rotateY(-180deg);
 }
 
@@ -53,3 +55,101 @@
 }
 
 
+
+.card_head {
+    display: block;
+    height: 20px;
+}
+
+.card_name {
+    display: inline-block;
+    font-size: x-large;
+    float: left;
+}
+
+.head_image {
+    display: inline-block;
+
+    width: 20px;
+    height: 20px;
+    float: right;
+}
+
+.hero_desc > label {
+    padding: 0;
+    height: 25px;
+    margin-bottom: 3px;
+    display: block;
+}
+
+.hero_desc > label > strong {
+    display: inline;
+
+    width: 60px;
+    height: 25px;
+    padding-top: 5px;
+    text-align: center;
+    vertical-align: middle;
+    float: left;
+}
+
+.hero_desc > label > input {
+    width: 150px;
+    height: 25px;
+    vertical-align: middle;
+    float: right;
+
+}
+
+.hero_image {
+    /*-webkit-user-drag: none;*/
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.card_name, .hero_desc > * {
+    font-weight: bold;
+}
+
+.hero_desc > label {
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.choosed_for_delete {
+    box-shadow: 0 0 0 128px rgba(0, 0, 0, 0.33) inset;
+}
+
+.editable_input {
+    background-color: white;
+    border: 1px solid black;
+}
+
+/*.grid_item_card:active {*/
+    /*box-shadow: 0 0 0 128px rgba(0, 0, 0, 0.33) inset;*/
+/*}*/
+
+/* This styles used for Drag&Drop deleting*/
+
+.draggable {
+
+}
+
+.droppable {
+
+}
+
+.trash {
+    display: inline-block;
+    margin: 1em;
+    vertical-align: top;
+    width: 250px;
+    height: 419px;
+}
+
+.trash > img {
+    width: 218px;
+    height: 218px;
+}
