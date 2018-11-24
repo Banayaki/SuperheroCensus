@@ -5,11 +5,7 @@ let changed_card;
 let backup;
 
 
-$(".overturned").on("click", ".card", function (event) {
-    if ($(event.target).attr('class') !== "head_image") {
-        $(this).toggleClass("flip");
-    }
-});
+
 
 function onLoad() {
     $("input:not(#search)").prop("disabled", true);
@@ -23,7 +19,7 @@ function onLoad() {
             $(".header").fadeIn(1000);
         },
         error: function (response) {
-            alert("server shutdown");
+            console.log("server shutdown");
         }
     });
 }
@@ -175,11 +171,7 @@ $("#search").keyup(function () {
 });
 
 function onDelete() {
-    $(".navigation_bar").fadeOut(400, function () {
-        $(".delete_mode").fadeIn(400)
-    });
-    isDeleteMode = true;
-    $(".head_image").hide();
+
     $("#new_hero_card").fadeOut(400);
 }
 
@@ -259,11 +251,7 @@ $("#accept_changes").click(function () {
     $("#new_hero_card").fadeIn(400);
 });
 
-$("#dialog_cancel").click(function () {
-    $(".page_center").toggleClass("hide_animation");
-    $(".header").toggleClass("hide_animation");
-    $('.modal_dialog').fadeOut(600);
-});
+
 
 $('#delete_selected').click(function () {
     $(".page_center").toggleClass("hide_animation");
@@ -272,6 +260,7 @@ $('#delete_selected').click(function () {
 });
 
 function delete_cards_from_server() {
+    let return_code = false;
     let deleted_cards = {};
     $.each($(".choosed_for_delete"), function () {
         console.log("ssss");
@@ -300,20 +289,18 @@ function delete_cards_from_server() {
         contentType: 'application/json',
         dataType: 'json',
         success: function () {
-            console.log("Delete finish success!")
+            console.log("Delete finish success!");
+            return_code = true;
+            return return_code;
         },
         error: function () {
-            console.log("delete failed :C")
+            console.log("delete failed :C");
+            return return_code;
         }
     });
 }
 
-$("#dialog_accept").click(function () {
-    delete_cards_from_server();
-    $(".choosed_for_delete").remove();
-    $("#dialog_cancel").click();
-    $("#cancel_delete_btn").click();
-});
+
 
 $("#add_card_btn").click(function () {
     let message_box = $("#message");
@@ -466,10 +453,10 @@ function load_card_on_server(heroname, image_path, universe, power, desc, isaliv
         contentType: 'application/json',
         dataType: 'json',
         success: function (response) {
-            console.log("Loading finish success!")
+            console.log("Loading finish success!");
         },
         error: function (response) {
-            console.log("Loading failed :C")
+            console.log("Loading failed :C");
         }
     });
 }

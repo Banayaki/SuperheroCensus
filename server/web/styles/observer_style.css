@@ -33,7 +33,7 @@ input {
     height: 70px;
     background-color: #35373b;
 
-    z-index: 1;
+    z-index: 9999;
 }
 
 .left_btn_group, .sort_btns_group {
@@ -64,11 +64,16 @@ input {
     display: none;
 }
 
+.delete_mode {
+    padding-top: 13px;
+    font-size: xx-large;
+}
+
 .header_content {
     width: 70%;
     height: 100%;
     margin: auto;
-    text-align: left;
+    text-align: center;
     overflow-x: hidden;
     overflow-y: hidden;
     white-space: nowrap;
@@ -150,50 +155,13 @@ input {
     background-color: white;
 }
 
-#new_hero_card:hover {
-    display: inline-block;
-    margin: 16px;
-    height: 419px;
-    width: 250px;
 
-    border-radius: 8px;
-    opacity: 1;
 
-    transition: background-color 0.4s ease-in;
-    /*transition: opacity 0.4s ease-in;*/
-
-    background-color: white;
-    box-shadow: 4px 4px 18px 0 rgba(0, 0, 0, 0.11);
-}
-
-#new_hero_card {
-    display: inline-block;
-    margin: 16px;
-    height: 419px;
-    width: 250px;
-
-    text-align: center;
-
-    opacity: 0.8;
-
-    background-color: #888b8f;
-    border-radius: 8px;
-    box-shadow: 4px 4px 18px 0 rgba(0, 0, 0, 0.11);
-}
-
-#new_card_image {
-    position: relative;
-    top: 18%;
-    font-size: 250px;
-    color: #46484d;
-    z-index: 1;
-}
-
-#new_hero_card_image {
-    height: 419px;
-    width: 250px;
-    z-index: 1;
-}
+/*#new_hero_card_image {*/
+    /*height: 419px;*/
+    /*width: 250px;*/
+    /*z-index: 1;*/
+/*}*/
 
 .new_hero {
     display: inline-block;

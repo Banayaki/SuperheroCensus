@@ -21,17 +21,12 @@
 <body onload="onLoad()">
 
 <!--<div id="preloader">-->
-    <!--<div id="loader"></div>-->
+<!--<div id="loader"></div>-->
 <!--</div>-->
 
 <header class="header">
     <div class="header_field">
         <div class="navigation_bar header_content">
-            <div class="left_btn_group">
-                <a id="delete_btn" class="button" onclick="onDelete()">
-                    <span>Delete the hero!</span>
-                </a>
-            </div>
             <div class="search_field white_text button">
                 <input id="search" type="text" placeholder="Search superhero">
             </div>
@@ -69,14 +64,8 @@
         </div>
         <div class="delete_mode header_content">
             <span class="white_text">
-                Now you're in delete mode. Select cards what you want to delete. When press button
+                Now you're in delete mode. Drag and drop card, what you want to delete!
             </span>
-            <a id="delete_selected" class="button" onclick="">
-                <span>Delete</span>
-            </a>
-            <a id="cancel_delete_btn" class="button" onclick="">
-                <span>Cancel</span>
-            </a>
         </div>
         <div class="change_mode header_content">
             <span class="white_text">
@@ -107,7 +96,7 @@
 
 <div class="page_center">
     <section id="grid">
-        <div class="grid_item_card  overturned draggable">
+        <div class="grid_item_card overturned draggable">
             <article id="Iron man" class="card flipper">
                 <div class="front">
                     <div class="card_head">
@@ -146,8 +135,87 @@
                 </div>
             </article>
         </div>
+        <div class="grid_item_card overturned draggable">
+            <article id="Iron man_1" class="card flipper">
+                <div class="front">
+                    <div class="card_head">
+                        <span class="card_name">Iron man 1</span>
+                        <a class="head_change_pencil" onclick="">
+                            <img class="head_image" alt="ChangeCardIcon" src="img/pencil.png">
+                        </a>
+                    </div>
+                    <div class="hero_image_href">
+                        <img class="hero_image" alt="Iron Man" src="img/Iron Man.png" draggable="false">
+                    </div>
+                    <div class="hero_desc">
+                        <label>
+                            <strong>Universe</strong>
+                            <input type="text" class="universe_input">
+                        </label>
+                        <label>
+                            <strong>Power</strong>
+                            <input type="number" class="power_input" value="99">
+                        </label>
+                        <label>
+                            <strong>Alive</strong>
+                            <input type="checkbox" class="is_alive_input">
+                        </label>
+                        <label>
+                            <strong>Phone</strong>
+                            <input type="text" class="phone_input">
+                        </label>
+                    </div>
+                </div>
+                <div class="back">
+                    <label>
+                        <strong>Description</strong>
+                        <input type="text" class="desc_input">
+                    </label>
+                </div>
+            </article>
+        </div>
+        <div class="grid_item_card overturned draggable">
+            <article id="Iron man_2" class="card flipper">
+                <div class="front">
+                    <div class="card_head">
+                        <span class="card_name">Iron man 2</span>
+                        <a class="head_change_pencil" onclick="">
+                            <img class="head_image" alt="ChangeCardIcon" src="img/pencil.png">
+                        </a>
+                    </div>
+                    <div class="hero_image_href">
+                        <img class="hero_image" alt="Iron Man" src="img/Iron Man.png" draggable="false">
+                    </div>
+                    <div class="hero_desc">
+                        <label>
+                            <strong>Universe</strong>
+                            <input type="text" class="universe_input">
+                        </label>
+                        <label>
+                            <strong>Power</strong>
+                            <input type="number" class="power_input" value="99">
+                        </label>
+                        <label>
+                            <strong>Alive</strong>
+                            <input type="checkbox" class="is_alive_input">
+                        </label>
+                        <label>
+                            <strong>Phone</strong>
+                            <input type="text" class="phone_input">
+                        </label>
+                    </div>
+                </div>
+                <div class="back">
+                    <label>
+                        <strong>Description</strong>
+                        <input type="text" class="desc_input">
+                    </label>
+                </div>
+            </article>
+        </div>
         <a id="new_hero_card" onclick="onAddHero()">
             <i id="new_card_image" class="fas fa-plus"></i>
+            <i id="trash_card_image" class="fas fa-trash-alt" style="display: none"></i>
         </a>
     </section>
 </div>
@@ -191,13 +259,11 @@
     </div>
 </div>
 
-<div class="trash">
-    <img src="img/Doctor Strange.png">
-</div>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js">
+
+</script>
 <script src="scripts/observerScripts.js"></script>
-<script src="scripts/deleteScripts.js"></script>
+<script src="scripts/cardScripts.js"></script>
 </body>
 </html>

@@ -118,27 +118,56 @@
     padding-bottom: 10px;
 }
 
-.choosed_for_delete {
-    box-shadow: 0 0 0 128px rgba(0, 0, 0, 0.33) inset;
-}
+
 
 .editable_input {
     background-color: white;
     border: 1px solid black;
 }
 
-/*.grid_item_card:active {*/
-    /*box-shadow: 0 0 0 128px rgba(0, 0, 0, 0.33) inset;*/
-/*}*/
+#new_hero_card:hover {
+    opacity: 1;
+
+    transition: background-color 0.4s ease-in;
+    /*transition: opacity 0.4s ease-in;*/
+
+    background-color: white;
+    box-shadow: 4px 4px 18px 0 rgba(0, 0, 0, 0.11);
+}
+
+#new_hero_card {
+    display: inline-block;
+    margin: 16px;
+    height: 419px;
+    width: 250px;
+
+    text-align: center;
+
+    opacity: 0.8;
+
+    background-color: #888b8f;
+    border-radius: 8px;
+    box-shadow: 4px 4px 18px 0 rgba(0, 0, 0, 0.11);
+}
+
+#new_card_image, #trash_card_image {
+    position: relative;
+    top: 18%;
+    font-size: 250px;
+    color: #46484d;
+    z-index: 1;
+}
+
 
 /* This styles used for Drag&Drop deleting*/
 
 .draggable {
-
 }
 
 .droppable {
+}
 
+.choosed_for_delete {
 }
 
 .trash {
