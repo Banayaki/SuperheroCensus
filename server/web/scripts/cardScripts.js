@@ -10,6 +10,7 @@ $("#grid").on("mousemove", function () {
         revert:true,
         containment: $("body"),
         items: $(".draggable"),
+        handle: $(".card_head, .back_header"),
         distance: 50,
         opacity: 0.9,
         start: function() {
@@ -17,8 +18,8 @@ $("#grid").on("mousemove", function () {
             $("#new_card_image").css("display", "none");
             $("#trash_card_image").css("display", "inline-block");
 
-            $(".navigation_bar").fadeOut(300, function () {
-                $(".delete_mode").fadeIn(300)
+            $(".navigation_bar").fadeOut(200, function () {
+                $(".delete_mode").fadeIn(200)
             });
             $(".head_image").fadeOut(100);
         },
@@ -27,8 +28,8 @@ $("#grid").on("mousemove", function () {
             $("#trash_card_image").css("display", "none");
             $("#new_card_image").css("display", "inline-block");
 
-            $(".delete_mode").fadeOut(300, function () {
-                $(".navigation_bar").fadeIn(300)
+            $(".delete_mode").fadeOut(200, function () {
+                $(".navigation_bar").fadeIn(200)
             });
             $(".head_image").fadeIn(100);
         }
@@ -73,7 +74,7 @@ $("div").on('click', ".head_change_pencil", function (event) {
     $("#new_hero_card").fadeOut(400);
 
     $(".head_change_pencil").hide();
-    let input_tags = $(this).parents(".card").find("input");
+    let input_tags = $(this).parents(".card").find("input, textarea");
 
     backup = $(this).parents(".flipper").clone();
     changed_card = $(this).parents(".card");

@@ -34,7 +34,6 @@ public class ServletHandler extends HttpServlet {
             switch (action) {
                 case "load":
                     String result = doLoad().toString(4);
-                    System.out.println(result);
                     resp.getWriter().write(result);
                     break;
                 case "change":

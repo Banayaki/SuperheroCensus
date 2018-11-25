@@ -1,7 +1,7 @@
 let isDeleteMode = false;
 
+
 function onLoad() {
-    $("input:not(#search)").prop("disabled", true);
     let json = JSON.stringify({'action': 'load'});
     $.ajax({
         type: 'POST',
@@ -44,7 +44,7 @@ function load_card_from_json(json) {
             }
             image_path = check_img(image_path);
             create_new_card(heroname, image_path, universe, power, desc, is_alive, phone);
-            $("input:not(#search)").prop("disabled", true);
+            $("input:not(#search), textarea").prop("disabled", true);
         }
     })
 }
@@ -173,7 +173,7 @@ function onAddHero() {
     });
     $(".page_center").fadeOut(400, function () {
         $(".page_center_addhero").fadeIn(400, function () {
-            $("input").prop("disabled", false);
+            $("input:not(#search), textarea").prop("disabled", false);
         });
     });
 }
@@ -182,7 +182,7 @@ function onAddHero() {
 
 
 $("#cancel_adding_btn").click(function () {
-    $("input:not(#search)").prop("disabled", true);
+    $("input:not(#search), textarea").prop("disabled", true);
     $("input").removeClass("editable_input");
     $(".add_mode").fadeOut(400, function () {
         $(".navigation_bar").fadeIn(400)
@@ -323,8 +323,8 @@ function create_new_card(name, file, universe, power, desc, isAlive, phone) {
         "                </div>\n" +
         "                <div class=\"back\">\n" +
         "                    <label>\n" +
-        "                        <strong>Description</strong>\n" +
-        "                        <input type=\"text\" class=\"desc_input\" value=\"" + desc + "\">\n" +
+        "                        <strong class='back_header'>Description</strong>\n" +
+        "                        <textarea class=\"desc_input\" rows='24'>" + desc + "</textarea>\n" +
         "                    </label>\n" +
         "                </div>\n" +
         "            </article>\n" +
@@ -399,3 +399,4 @@ function load_card_on_server(heroname, image_path, universe, power, desc, isaliv
     });
 }
 
+$(".is_alive_input").button();
