@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+
     <meta name="theme-color" content="#317EFB"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="Superhero, marvel, dc">
@@ -10,19 +14,17 @@
     <title>Superhero Census - Observer</title>
     <link rel="stylesheet" href="styles/observer_style.css">
     <link rel="stylesheet" href="styles/card_styles.css">
-    <!--<link rel="stylesheet" href="styles/loader.css">-->
+    <link rel="stylesheet" href="styles/loader.css">
     <link rel="stylesheet" href="styles/media_styles.css">
     <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
-          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
-          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
 
 </head>
 <body onload="onLoad()">
 
-<!--<div id="preloader">-->
-<!--<div id="loader"></div>-->
-<!--</div>-->
+<div id="preloader">
+<div id="loader"></div>
+</div>
 
 <header class="header">
     <div class="header_field">
@@ -96,123 +98,6 @@
 
 <div class="page_center">
     <section id="grid">
-        <div class="grid_item_card overturned draggable">
-            <article id="Iron man" class="card flipper">
-                <div class="front">
-                    <div class="card_head">
-                        <span class="card_name">Iron man</span>
-                        <a class="head_change_pencil" onclick="">
-                            <img class="head_image" alt="ChangeCardIcon" src="img/pencil.png">
-                        </a>
-                    </div>
-                    <div class="hero_image_href">
-                        <img class="hero_image" alt="Iron Man" src="img/Iron Man.png" draggable="false">
-                    </div>
-                    <div class="hero_desc">
-                        <label>
-                            <strong>Universe</strong>
-                            <input type="text" class="universe_input">
-                        </label>
-                        <label>
-                            <strong>Power</strong>
-                            <input type="number" class="power_input" value="99">
-                        </label>
-                        <label>
-                            <strong>Alive</strong>
-                            <input type="checkbox" class="is_alive_input">
-                        </label>
-                        <label>
-                            <strong>Phone</strong>
-                            <input type="text" class="phone_input">
-                        </label>
-                    </div>
-                </div>
-                <div class="back">
-                    <label>
-                        <strong>Description</strong>
-                        <input type="text" class="desc_input">
-                    </label>
-                </div>
-            </article>
-        </div>
-        <div class="grid_item_card overturned draggable">
-            <article id="Iron man_1" class="card flipper">
-                <div class="front">
-                    <div class="card_head">
-                        <span class="card_name">Iron man 1</span>
-                        <a class="head_change_pencil" onclick="">
-                            <img class="head_image" alt="ChangeCardIcon" src="img/pencil.png">
-                        </a>
-                    </div>
-                    <div class="hero_image_href">
-                        <img class="hero_image" alt="Iron Man" src="img/Iron Man.png" draggable="false">
-                    </div>
-                    <div class="hero_desc">
-                        <label>
-                            <strong>Universe</strong>
-                            <input type="text" class="universe_input">
-                        </label>
-                        <label>
-                            <strong>Power</strong>
-                            <input type="number" class="power_input" value="99">
-                        </label>
-                        <label>
-                            <strong>Alive</strong>
-                            <input type="checkbox" class="is_alive_input">
-                        </label>
-                        <label>
-                            <strong>Phone</strong>
-                            <input type="text" class="phone_input">
-                        </label>
-                    </div>
-                </div>
-                <div class="back">
-                    <label>
-                        <strong>Description</strong>
-                        <input type="text" class="desc_input">
-                    </label>
-                </div>
-            </article>
-        </div>
-        <div class="grid_item_card overturned draggable">
-            <article id="Iron man_2" class="card flipper">
-                <div class="front">
-                    <div class="card_head">
-                        <span class="card_name">Iron man 2</span>
-                        <a class="head_change_pencil" onclick="">
-                            <img class="head_image" alt="ChangeCardIcon" src="img/pencil.png">
-                        </a>
-                    </div>
-                    <div class="hero_image_href">
-                        <img class="hero_image" alt="Iron Man" src="img/Iron Man.png" draggable="false">
-                    </div>
-                    <div class="hero_desc">
-                        <label>
-                            <strong>Universe</strong>
-                            <input type="text" class="universe_input">
-                        </label>
-                        <label>
-                            <strong>Power</strong>
-                            <input type="number" class="power_input" value="99">
-                        </label>
-                        <label>
-                            <strong>Alive</strong>
-                            <input type="checkbox" class="is_alive_input">
-                        </label>
-                        <label>
-                            <strong>Phone</strong>
-                            <input type="text" class="phone_input">
-                        </label>
-                    </div>
-                </div>
-                <div class="back">
-                    <label>
-                        <strong>Description</strong>
-                        <input type="text" class="desc_input">
-                    </label>
-                </div>
-            </article>
-        </div>
         <a id="new_hero_card" onclick="onAddHero()">
             <i id="new_card_image" class="fas fa-plus"></i>
             <i id="trash_card_image" class="fas fa-trash-alt" style="display: none"></i>

@@ -32,11 +32,9 @@ public class SuperheroesEntitySQLite extends AbstractHeroEntity implements Seria
         this.phone = phone;
     }
 
-    @Id
-    @Column(name = "HERO_ID", nullable = false)
     @Override
     public short getHeroId() {
-        return heroId;
+        return 0;
     }
 
     @Override
@@ -44,7 +42,7 @@ public class SuperheroesEntitySQLite extends AbstractHeroEntity implements Seria
         this.heroId = heroId;
     }
 
-    @Basic
+    @Id
     @Column(name = "HERO_NAME", nullable = false)
     @Override
     public String getHeroName() {

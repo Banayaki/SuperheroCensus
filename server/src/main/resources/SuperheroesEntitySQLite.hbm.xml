@@ -5,12 +5,9 @@
 <hibernate-mapping>
 
     <class name="dbService.entity.SuperheroesEntitySQLite" table="SUPERHEROES">
-        <id name="heroId">
-            <column name="HERO_ID" sql-type="integer" not-null="true"/>
-        </id>
-        <property name="heroName">
+        <id name="heroName">
             <column name="HERO_NAME" sql-type="text" not-null="true"/>
-        </property>
+        </id>
         <property name="universe">
             <column name="UNIVERSE" sql-type="text" not-null="true"/>
         </property>

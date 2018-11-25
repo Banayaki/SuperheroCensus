@@ -51,11 +51,14 @@ public class SessionExecutor implements UserDAO {
 
     }
 
-    public void deleteHero(AbstractHeroEntity hero) throws SQLException {
+    public void deleteHero(String heroName) throws SQLException {
         Transaction tx = null;
         try (Session session = sessionBuider.openNewSession()) {
             tx = session.beginTransaction();
-            session.delete(heroEntity.cast(hero));
+            session
+                    .createQuery("DELETE FROM " + heroEntity.getCanonicalName() + " h WHERE h.heroName like :name")
+                    .setParameter("name", heroName)
+                    .executeUpdate();
             session.flush();
             tx.commit();
         } catch (Exception ex) {

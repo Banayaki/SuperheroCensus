@@ -12,7 +12,7 @@ public interface UserDAO {
 
     void addNewHero(AbstractHeroEntity hero) throws SQLException;
 
-    void deleteHero(AbstractHeroEntity hero) throws SQLException;
+    void deleteHero(String heroName) throws SQLException;
 
     void changeHero(AbstractHeroEntity hero) throws SQLException;
 

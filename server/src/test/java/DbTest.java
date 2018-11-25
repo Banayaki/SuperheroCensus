@@ -30,7 +30,7 @@ public class DbTest {
             System.out.println("Hero added successfully");
             assertEquals(executor.getByName(hero_1.getHeroName()).getHeroName(), hero_1.getHeroName());
             System.out.println("Hero getByName successfully");
-            executor.deleteHero(hero_1);
+            executor.deleteHero("pipec");
             assertNull(executor.getByName(hero_1.getHeroName()));
             System.out.println("Hero delete successfully");
         } catch (SQLException e) {

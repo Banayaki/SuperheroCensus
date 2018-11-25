@@ -4,46 +4,14 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <display-name>Don't know why i wrote this</display-name>
-    
-    <servlet>
-        <servlet-name>NewHeroServlet</servlet-name>
-        <servlet-class>serverService.servlets.NewHeroServlet</servlet-class>
-    </servlet>
 
     <servlet>
-        <servlet-name>OnLoadServlet</servlet-name>
-        <servlet-class>serverService.servlets.OnLoadServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>DeleteHeroServlet</servlet-name>
-        <servlet-class>serverService.servlets.DeleteHeroServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ChangeHeroServlet</servlet-name>
-        <servlet-class>serverService.servlets.ChangeHeroServlet</servlet-class>
+        <servlet-name>ServletHandler</servlet-name>
+        <servlet-class>serverService.servlets.ServletHandler</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ChangeHeroServlet</servlet-name>
-        <url-pattern>/changeHero</url-pattern>
+        <servlet-name>ServletHandler</servlet-name>
+        <url-pattern>/doAction</url-pattern>
     </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>DeleteHeroServlet</servlet-name>
-        <url-pattern>/deleteHero</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>NewHeroServlet</servlet-name>
-        <url-pattern>/newHero</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>OnLoadServlet</servlet-name>
-        <url-pattern>/load</url-pattern>
-    </servlet-mapping>
-
-
 </web-app>
