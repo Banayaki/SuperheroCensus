@@ -7,7 +7,7 @@
 
     <servlet>
         <servlet-name>ServletHandler</servlet-name>
-        <servlet-class>serverService.servlets.ServletHandler</servlet-class>
+        <servlet-class>serverService.ServletHandler</servlet-class>
     </servlet>
 
     <servlet-mapping>

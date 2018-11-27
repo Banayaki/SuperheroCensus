@@ -83,6 +83,23 @@ public class SessionExecutor implements UserDAO {
 
     }
 
+    public void hardUpdateTable(List<AbstractHeroEntity> heroes) {
+        Transaction tx = null;
+        try (Session session = sessionBuider.openNewSession()) {
+            tx = session.beginTransaction();
+            session
+                    .createQuery("DELETE FROM SuperheroesEntitySQLite ")
+                    .executeUpdate();
+            for (AbstractHeroEntity hero : heroes) {
+                session.save(hero);
+            }
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx != null) tx.rollback();
+            ex.printStackTrace();
+        }
+    }
+
     public List getHeroesList() throws SQLException {
         List list = null;
         try (Session session = sessionBuider.openNewSession()) {

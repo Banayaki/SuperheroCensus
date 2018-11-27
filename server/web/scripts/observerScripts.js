@@ -8,19 +8,27 @@ function onLoad() {
         url: 'doAction',
         data: json,
         success: function (response) {
+            console.log("Successful connection to server");
+
+            $('title').text("Superhero Census - Observer");
             let json = JSON.parse(response);
-            load_card_from_json(json);
+            load_card_from_json(json, false);
             $("#preloader").fadeOut(1000);
             $(".header").fadeIn(1000);
         },
         error: function (response) {
-            console.log("server shutdown");
+            console.log("Server is down");
+
+            $('title').text("Superhero Census - Observer");
+            $("#preloader").fadeOut(1000);
+            $("#shutdown").fadeIn(1000);
         }
     });
 }
 
-function load_card_from_json(json) {
-    $(".grid_item_card").remove();
+function load_card_from_json(json, isHardUpdate) {
+    $(".grid_item_card").addClass("old");
+
     Object.keys(json).forEach(function (key) {
         let heroname = key;
         let values = json[key];
@@ -31,22 +39,47 @@ function load_card_from_json(json) {
             let desc = '';
             let is_alive = '';
             let phone = '';
-            for (key in values) {
-                if (key === 'image_path') image_path = values[key];
-                else if (key === 'universe') universe = values[key];
-                else if (key === 'power') power = values[key];
-                else if (key === 'desc') desc = values[key];
-                else if (key === 'alive') values[key] === 'Y' ? is_alive = "checked" : false;
-                else if (key === 'phone') values[key] == null ? phone = "" : phone = values[key];
-                else {
-                    return true;
-                }
+
+
+            if (values.hasOwnProperty('universe') && values.hasOwnProperty('power')) {
+                universe = values['universe'];
+                power = values['power'];
+            } else {
+                $(".grid_item_card:not(.old)").remove();
+                console.log("Incorrect json");
+                return;
             }
+
+            if (values.hasOwnProperty('image_path')) image_path = check_img(values['image_path']);
+            if (values.hasOwnProperty('desc')) desc = values['desc'];
+            if (values.hasOwnProperty('alive')) is_alive = values['alive'];
+            if (values.hasOwnProperty('phone')) phone = values['phone'];
+
             image_path = check_img(image_path);
             create_new_card(heroname, image_path, universe, power, desc, is_alive, phone);
             $("input:not(#search), textarea").prop("disabled", true);
         }
-    })
+    });
+
+    if (isHardUpdate) {
+        let req = JSON.stringify({
+            'action': 'hardUpdate',
+            'data': json
+        });
+        $.ajax({
+            type: 'POST',
+            url: 'doAction',
+            data: req,
+            success: function (response) {
+                console.log("Hard update success finish");
+                $(".old").remove();
+            },
+            error: function (response) {
+                $(".grid_item_card:not(.old)").remove();
+                console.log("server shutdown");
+            }
+        });
+    }
 }
 
 // Событие клика на кнопку импорта. Открывает диалоговое окно клиенту, что бы тот отправил файл (json)
@@ -64,7 +97,7 @@ $("#import_loader").on('change', function () {
         fileReader.onload = function () {
             // noinspection JSCheckFunctionSignatures
             json = JSON.parse(fileReader.result);
-            load_card_from_json(json);
+            load_card_from_json(json, true);
         };
         fileReader.readAsText(file);
     }
@@ -96,8 +129,6 @@ $("#export_btn").click(function () {
     let base = btoa(json);
     document.getElementById("export_loader").href = type + base;
     document.getElementById("export_loader").click();
-    // $("#export_loader").click();
-    // $("#export_loader").attr("href") = ;
 });
 
 $("#name_sort").click(function () {
