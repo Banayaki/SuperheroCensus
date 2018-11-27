@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,7 +43,6 @@ public class SessionExecutor implements UserDAO {
         try (Session session = sessionBuider.openNewSession()) {
             tx = session.beginTransaction();
             session.save(heroEntity.cast(hero));
-            session.flush();
             tx.commit();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -59,7 +59,6 @@ public class SessionExecutor implements UserDAO {
                     .createQuery("DELETE FROM " + heroEntity.getCanonicalName() + " h WHERE h.heroName like :name")
                     .setParameter("name", heroName)
                     .executeUpdate();
-            session.flush();
             tx.commit();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -75,7 +74,12 @@ public class SessionExecutor implements UserDAO {
             tx = session.beginTransaction();
             session.update(heroEntity.cast(hero));
             tx.commit();
-        } catch (Exception ex) {
+        } catch (OptimisticLockException ex) {
+            if (tx != null) tx.rollback();
+            ex.printStackTrace();
+            throw new OptimisticLockException(ex.getMessage());
+        }
+        catch (Exception ex) {
             if (tx != null) tx.rollback();
             ex.printStackTrace();
         }

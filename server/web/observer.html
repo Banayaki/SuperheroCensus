@@ -86,13 +86,27 @@
 </header>
 
 <!--При появлении основная страаница затемняется-->
-<div class="modal_dialog">
-    <span id="DialogStr">Are you sure?</span>
+<div id="delete_modal_dialog" class="modal_dialog">
+    <span id="DialogDeleteStr">Are you sure?</span>
     <div class="modal_btns_group">
-        <a id="dialog_accept" class="button" onclick="">
+        <a id="dialog_delete_accept" class="button" onclick="">
             <span>Yep!</span>
         </a>
-        <a id="dialog_cancel" class="button" onclick="">
+        <a id="dialog_delete_cancel" class="button" onclick="">
+            <span>Nope.</span>
+        </a>
+    </div>
+</div>
+
+<div id="import_modal_dialog" class="modal_dialog">
+    <span id="DialogImportStr">
+        If you're import this JSON, then remove all current cards.
+        <br>You definitely want to import?</span>
+    <div class="modal_btns_group">
+        <a id="dialog_import_accept" class="button" onclick="">
+            <span>Yep!</span>
+        </a>
+        <a id="dialog_import_cancel" class="button" onclick="">
             <span>Nope.</span>
         </a>
     </div>

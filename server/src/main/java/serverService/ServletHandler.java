@@ -5,6 +5,7 @@ import dbService.entity.AbstractHeroEntity;
 import dbService.entity.SuperheroesEntitySQLite;
 import org.json.JSONObject;
 
+import javax.persistence.OptimisticLockException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +20,12 @@ import java.util.List;
 
 public class ServletHandler extends HttpServlet {
     private SessionExecutor executor;
+    private HttpServletResponse response;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
+        this.response = resp;
 
         executor = new SessionExecutor();
         StringBuilder stringBuilder = new StringBuilder();
@@ -84,8 +87,15 @@ public class ServletHandler extends HttpServlet {
         return json;
     }
 
-    private void doChange(JSONObject json) throws SQLException {
-        executor.changeHero(createHeroFromJSON(json));
+    private void doChange(JSONObject json) throws SQLException, IOException {
+        try {
+            executor.changeHero(createHeroFromJSON(json));
+        } catch (OptimisticLockException ex) {
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("data", ex.getMessage());
+            response.getWriter().write(jsonResponse.toString(4));
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+        }
     }
 
     private void doDelete(String heroName) throws SQLException {

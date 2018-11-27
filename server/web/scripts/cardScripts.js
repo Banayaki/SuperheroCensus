@@ -42,25 +42,25 @@ $("#trash_card_image").droppable({
         $(ui.draggable).addClass("choosed_for_delete");
         $(".page_center").toggleClass("hide_animation");
         $(".header").toggleClass("hide_animation");
-        $('.modal_dialog').show();
+        $('#delete_modal_dialog').show();
     }
 });
 
-$("#dialog_accept").click(function () {
+$("#dialog_delete_accept").click(function () {
     delete_cards_from_server();
-    $("#dialog_cancel").click();
+    $("#dialog_delete_cancel").click();
     $("#cancel_delete_btn").click();
 });
 
-$("#dialog_cancel").click(function () {
+$("#dialog_delete_cancel").click(function () {
     $(".page_center").toggleClass("hide_animation");
     $(".header").toggleClass("hide_animation");
-    $('.modal_dialog').fadeOut(600);
+    $('#delete_modal_dialog').fadeOut(600);
 });
 
-$("#grid").on("mouseup", ".card", function (event) {
+$("#grid").on("mouseup", ".card_head, .back_header", function (event) {
     if ($(event.target).attr('class') !== "head_image" && !in_drag) {
-        $(this).toggleClass("flip");
+        $(this).parents(".card").toggleClass("flip");
     }
 });
 
@@ -133,20 +133,23 @@ $("#accept_changes").click(function () {
         "phone": phone
     };
 
-    let json = JSON.stringify(data);
+    let json = JSON.stringify({
+        'action': 'change',
+        'data': data
+    });
     $.ajax({
         method: 'POST',
         url: 'doAction',
-        data: {
-            'action': 'change',
-            'data': json
-        },
-        contentType: 'application/json',
+        data: json,
+        dataType: "json",
         success: function () {
             console.log("Change finish success!");
         },
-        error: function () {
+        error: function (response) {
+            // предложить добаваить?
             console.log("Change failed :C");
+            let json = JSON.parse(response.responseText);
+            alert(json['data']);
             changed_card.replaceWith(backup);
         }
     });

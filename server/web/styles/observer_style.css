@@ -149,6 +149,7 @@ input {
 
     color: white;
     font-weight: bold;
+    font-size: x-large;
 }
 
 .is_alive_input {
@@ -256,4 +257,9 @@ textarea {
     background-color: #f2f7fd;
     resize: none;
     font-size: large;
+}
+
+.modal_btns_group {
+    display: flex;
+    justify-content: center;
 }

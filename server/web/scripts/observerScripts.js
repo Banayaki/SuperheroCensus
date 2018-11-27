@@ -15,6 +15,7 @@ function onLoad() {
             load_card_from_json(json, false);
             $("#preloader").fadeOut(1000);
             $(".header").fadeIn(1000);
+            $(".page_center").fadeIn(1000);
         },
         error: function (response) {
             console.log("Server is down");
@@ -84,8 +85,21 @@ function load_card_from_json(json, isHardUpdate) {
 
 // Событие клика на кнопку импорта. Открывает диалоговое окно клиенту, что бы тот отправил файл (json)
 $("#import_btn").click(function () {
+    $(".page_center").toggleClass("hide_animation");
+    $(".header").toggleClass("hide_animation");
+    $("#import_modal_dialog").fadeIn(300);
+});
+
+$("#dialog_import_accept").click(function () {
     $("#import_loader").prop("disabled", false);
     document.getElementById("import_loader").click();
+    $("#dialog_import_cancel").click();
+});
+
+$("#dialog_import_cancel").click(function () {
+    $(".page_center").toggleClass("hide_animation");
+    $(".header").toggleClass("hide_animation");
+    $("#import_modal_dialog").fadeOut(300);
 });
 
 // Обработка файла переданного пользователем
@@ -99,11 +113,8 @@ $("#import_loader").on('change', function () {
             json = JSON.parse(fileReader.result);
             load_card_from_json(json, true);
         };
-        fileReader.readAsText(file);
     }
 });
-
-
 
 $("#export_btn").click(function () {
     let data = {};
@@ -245,7 +256,6 @@ function delete_cards_from_server() {
     $.ajax({
         method: 'POST',
         url: 'doAction',
-        action: 'delete',
         data: json,
         contentType: 'application/json',
         success: function () {
@@ -325,7 +335,7 @@ function create_new_card(name, file, universe, power, desc, isAlive, phone) {
         "            <article id=\""+ name + "\" class=\"card flipper\">\n" +
         "                <div class=\"front\">\n" +
         "                    <div class=\"card_head\">\n" +
-        "                        <span class=\"card_name\">"+ name + "</span>\n" +
+        "                        <span class='card_name'>"+ name + "</span>\n" +
         "                        <a class=\"head_change_pencil\" onclick=\"\">\n" +
         "                            <img class=\"head_image\" alt=\"ChangeCardIcon\" src=\"img/pencil.png\">\n" +
         "                        </a>\n" +
@@ -410,10 +420,9 @@ function load_card_on_server(heroname, image_path, universe, power, desc, isaliv
         "phone": phone
     };
 
-    let hero_json = JSON.stringify(hero_data);
     let json = JSON.stringify({
         'action': 'add',
-        'data': hero_json
+        'data': hero_data
     });
     $.ajax({
         method: 'POST',
@@ -430,4 +439,3 @@ function load_card_on_server(heroname, image_path, universe, power, desc, isaliv
     });
 }
 
-$(".is_alive_input").button();
