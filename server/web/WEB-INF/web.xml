@@ -10,8 +10,18 @@
         <servlet-class>serverService.ServletHandler</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>ImageLoader</servlet-name>
+        <servlet-class>serverService.ImageLoaderServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>ServletHandler</servlet-name>
         <url-pattern>/doAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ImageLoader</servlet-name>
+        <url-pattern>/doLoad</url-pattern>
     </servlet-mapping>
 </web-app>

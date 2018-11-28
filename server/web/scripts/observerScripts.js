@@ -83,7 +83,6 @@ function load_card_from_json(json, isHardUpdate) {
     }
 }
 
-// Событие клика на кнопку импорта. Открывает диалоговое окно клиенту, что бы тот отправил файл (json)
 $("#import_btn").click(function () {
     $(".page_center").toggleClass("hide_animation");
     $(".header").toggleClass("hide_animation");
@@ -102,7 +101,6 @@ $("#dialog_import_cancel").click(function () {
     $("#import_modal_dialog").fadeOut(300);
 });
 
-// Обработка файла переданного пользователем
 $("#import_loader").on('change', function () {
     let json;
     let fileReader = new FileReader();
@@ -308,9 +306,10 @@ $("#add_card_btn").click(function () {
             message_box.append("Hero with this name is exist<br><br>");
         } else {
             // Скачать картинку на сервер!
+            image_uploader(heroname);
             let image_path;
             if (file != null && file.name !== "") {
-                image_path = check_img(file.name);
+                image_path = "img/" + heroname + ".jpg";
             } else {
                 image_path = 'img/unknown_hero.png'
             }
@@ -430,12 +429,35 @@ function load_card_on_server(heroname, image_path, universe, power, desc, isaliv
         data: json,
         contentType: 'application/json',
         dataType: 'json',
-        success: function (response) {
+        success: function () {
             console.log("Loading finish success!");
         },
-        error: function (response) {
+        error: function () {
             console.log("Loading failed :C");
         }
     });
 }
 
+function image_uploader(heroname) {
+    let image_file = $("#fileloader").prop('files')[0];
+    let form_data = new FormData();
+    let image_name = heroname;
+    form_data.append('file', image_file);
+    form_data.append('name', image_name);
+
+
+    $.ajax({
+        method: 'POST',
+        url: 'doLoad',
+        data: form_data,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function () {
+            console.log("bad");
+        },
+        error: function () {
+            console.log("good");
+        }
+    });
+}

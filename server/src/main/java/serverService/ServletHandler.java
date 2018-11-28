@@ -56,6 +56,8 @@ public class ServletHandler extends HttpServlet {
                 case "hardUpdate":
                     doHardUpdate(json.getJSONObject("data"));
                     break;
+                case "imageLoad":
+                    break;
                 default:
                     throw new UnsupportedOperationException();
             }

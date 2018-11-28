@@ -3,6 +3,7 @@ let in_drag = false;
 let changed_card;
 // Копия изменяемой карты до изменений
 let backup;
+let args;
 
 
 $("#grid").on("mousemove", function () {
@@ -132,25 +133,62 @@ $("#accept_changes").click(function () {
         "alive": is_alive === "on" ? "Y" : "N",
         "phone": phone
     };
+    args = data;
 
-    let json = JSON.stringify({
+    let req = JSON.stringify({
         'action': 'change',
         'data': data
     });
     $.ajax({
         method: 'POST',
         url: 'doAction',
-        data: json,
+        data: req,
         dataType: "json",
         success: function () {
             console.log("Change finish success!");
         },
         error: function (response) {
-            // предложить добаваить?
             console.log("Change failed :C");
+            let error_msg = "Row was updated or deleted by another transaction";
             let json = JSON.parse(response.responseText);
-            alert(json['data']);
-            changed_card.replaceWith(backup);
+            if (json['data'].includes(error_msg)) {
+                $(".page_center").toggleClass("hide_animation");
+                $(".header").toggleClass("hide_animation");
+                $('#error_change_dialog').show();
+            } else {
+                console.log(json['data']);
+                changed_card.replaceWith(backup);
+            }
         }
     });
 });
+
+$("#dialog_change_accept").click(function () {
+    changed_card.remove();
+    $("#add_param_heroname").val(args['heroname']);
+    $("#add_param_universe").val(args['universe']);
+    $("#add_param_power").val(args['power']);
+    $("#add_param_phone").val(args['phone']);
+    $("#add_param_desc").val(args['desc']);
+    $("#add_param_checkbox").attr('checked', args['alive'] === 'Y' ? "selected": "");
+    $(".navigation_bar").fadeOut(400, function () {
+        $(".add_mode").fadeIn(400)
+    });
+    $(".page_center").fadeOut(400, function () {
+        $(".page_center_addhero").fadeIn(400, function () {
+            $("input:not(#search), textarea").prop("disabled", false);
+        });
+    });
+
+    $(".page_center").toggleClass("hide_animation");
+    $(".header").toggleClass("hide_animation");
+    $('#error_change_dialog').hide();
+});
+
+$("#dialog_change_cancel").click(function () {
+    changed_card.remove();
+    $(".page_center").toggleClass("hide_animation");
+    $(".header").toggleClass("hide_animation");
+    $('#error_change_dialog').hide();
+});
+
