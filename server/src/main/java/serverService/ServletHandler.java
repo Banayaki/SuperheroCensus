@@ -132,9 +132,9 @@ public class ServletHandler extends HttpServlet {
         hero.setDescription(json.getString("desc"));
         hero.setImagePath(json.getString("image_path"));
         hero.setUniverse(json.getString("universe"));
-        hero.setIsAlive(json.getString("alive").equals("on") ? "Y" : "N");
+        hero.setIsAlive(json.getString("alive"));
         hero.setPhone(json.getString("phone"));
-        hero.setPower(Byte.parseByte(json.getString("power")));
+        hero.setPower((byte) json.getInt("power"));
 
         return hero;
     }

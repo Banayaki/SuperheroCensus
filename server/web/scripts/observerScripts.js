@@ -1,4 +1,7 @@
 let isDeleteMode = false;
+let isIncorrectLength = false;
+let isIncorrectName = false;
+let isMatch = false;
 
 
 function onLoad() {
@@ -173,7 +176,7 @@ $("#power_sort").click(function () {
     let cards = [];
     $.each($(".grid_item_card"), function () {
         cards.push(this);
-        power_val.push($(this).find(".power_input").val());
+        power_val.push(Number($(this).find(".power_input").val()));
     });
 
     for (let index = power_val.length - 1; index > 0; --index) {
@@ -262,26 +265,64 @@ function delete_cards_from_server() {
         },
         error: function () {
             console.log("delete failed :C");
+            $(".draggable").removeClass("choosed_for_delete");
         }
     });
 }
 
+$("#add_param_heroname").keyup(function () {
+    let message_box = $("#message");
+    let heroname = $(this).val();
+    if (!isIncorrectLength && heroname.length > 20) {
+        message_box.append("Too big name<br><br>");
+        isIncorrectLength = true;
+    } else if (isIncorrectLength && heroname.length <= 20) {
+        errorStringRemover(message_box, "Too big name");
+        isIncorrectLength = false;
+    }
+    console.log((/^[a-zA-Z_ ]+$/.test(heroname)));
+    if(!isIncorrectName && !(/^[a-zA-Z_ ]+$/.test(heroname))) {
+        message_box.append("Incorrect name<br><br>");
+        isIncorrectName = true;
+    } else if (isIncorrectName && (/^[a-zA-Z_ ]+$/.test(heroname))) {
+        errorStringRemover(message_box, "Incorrect name");
+        isIncorrectName = false;
+    }
 
+    if (!isMatch && !check_name(heroname)) {
+        message_box.append("Hero with this name is exist<br><br>");
+        isMatch = true;
+    } else if (isMatch && check_name(heroname)) {
+        errorStringRemover(message_box, "Hero with this name is exist");
+        isMatch = false;
+    }
+});
+
+function errorStringRemover(msgBox, errorMsg) {
+    let temp = msgBox.text();
+    let index = temp.indexOf(errorMsg);
+    let left = temp.substring(0, index);
+    let right = temp.substring(index + errorMsg.length);
+
+    msgBox.text(left + right);
+}
 
 $("#add_card_btn").click(function () {
     let message_box = $("#message");
     let heroname = $("#add_param_heroname").val();
     let file = $("#fileloader").prop('files')[0];
     let universe = $("#add_param_universe").val();
-    let power = $("#add_param_power").val();
+    let power = Number($("#add_param_power").val());
     let desc = $("#add_param_desc").val();
     let isAlive = $("#add_param_checkbox").val();
     let phone = $("#add_param_phone").val();
 
     message_box.text("");
-    if (!(/^\w+$/.test(heroname))) {
-        message_box.append("Please, enter the correct hero name!<br><br>");
+
+    if (heroname === "") {
+        message_box.append("Empty heroname<br><br>");
     }
+
     if (file != null) {
         if (!(file.size > 0 && file.size < 2048000)) {
             message_box.append("File is too big ( bigger than 2048 bites ), or too small!<br><br>");
@@ -298,33 +339,30 @@ $("#add_card_btn").click(function () {
         message_box.append("Incorrect power value<br><br>");
     }
     if (phone !== "" && !(/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/.test(phone))) {
-        message_box.append("You'ra entered phone number with unknown format. (Example: 89272151817)<br><br>")
+        message_box.append("You're entered phone number with unknown format. (Example: 89272151817)<br><br>")
     }
 
     if (message_box.text() === "") {
-        if (!check_name(heroname)) {
-            message_box.append("Hero with this name is exist<br><br>");
-        } else {
-            // Скачать картинку на сервер!
-            image_uploader(heroname);
-            let image_path;
-            if (file != null && file.name !== "") {
-                image_path = "img/" + heroname + ".jpg";
-            } else {
-                image_path = 'img/unknown_hero.png'
-            }
 
-            let is_alive_checkbox;
-            let is_alive_param;
-            isAlive === "on"  ? is_alive_checkbox = "checked" : false;
-            isAlive === "on"  ? is_alive_param = "Y" : is_alive_param = "N";
-            create_new_card(heroname, image_path, universe, power, desc, is_alive_checkbox, phone);
-            load_card_on_server(heroname, image_path, universe, power, desc, is_alive_param, phone);
-            $("#cancel_adding_btn").click();
-            setTimeout(function () {
-                clear_inputs()
-            }, 500);
+        let image_path;
+        if (file != null && file.name !== "") {
+            image_uploader(heroname);
+            image_path = "img/" + heroname + ".jpg";
+        } else {
+            image_path = 'img/unknown_hero.png'
         }
+
+        let is_alive_checkbox;
+        let is_alive_param;
+        isAlive === "on"  ? is_alive_checkbox = "checked" : false;
+        isAlive === "on"  ? is_alive_param = "Y" : is_alive_param = "N";
+        create_new_card(heroname, image_path, universe, power, desc, is_alive_checkbox, phone);
+        load_card_on_server(heroname, image_path, universe, power, desc, is_alive_param, phone);
+        $("#cancel_adding_btn").click();
+        setTimeout(function () {
+            clear_inputs()
+        }, 500);
+
     }
 });
 

@@ -19,6 +19,8 @@ $("#grid").on("mousemove", function () {
             $("#new_card_image").css("display", "none");
             $("#trash_card_image").css("display", "inline-block");
 
+            $("#delete_area").toggleClass("active");
+
             $(".navigation_bar").fadeOut(200, function () {
                 $(".delete_mode").fadeIn(200)
             });
@@ -29,6 +31,8 @@ $("#grid").on("mousemove", function () {
             $("#trash_card_image").css("display", "none");
             $("#new_card_image").css("display", "inline-block");
 
+            $("#delete_area").toggleClass("active");
+
             $(".delete_mode").fadeOut(200, function () {
                 $(".navigation_bar").fadeIn(200)
             });
@@ -38,7 +42,8 @@ $("#grid").on("mousemove", function () {
 });
 
 
-$("#trash_card_image").droppable({
+$("#delete_area, #trash_card_image").droppable({
+    tolerance: "touch",
     drop: function (event, ui) {
         $(ui.draggable).addClass("choosed_for_delete");
         $(".page_center").toggleClass("hide_animation");

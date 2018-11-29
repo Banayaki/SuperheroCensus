@@ -72,7 +72,7 @@ input {
 .header_content {
     width: 70%;
     height: 100%;
-    margin: auto;
+    margin: auto auto auto 12%;
     text-align: center;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -227,6 +227,8 @@ input {
     margin-top: 20px;
     display: block;
     white-space: pre-line;
+    font-size: larger;
+    font-weight: bold;
 }
 
 #hero_logo_text {
@@ -262,4 +264,32 @@ textarea {
 .modal_btns_group {
     display: flex;
     justify-content: center;
+}
+
+#delete_area {
+    background-color: #9A9C9F;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    z-index: 10;
+    transition: all 0.5s;
+}
+
+#delete_area.active {
+    width: 250px;
+    box-shadow: -11px 0 20px 13px rgb(154, 156, 159);
+}
+
+.delete_area_text {
+    transform: rotate(90deg);
+    position: relative;
+    letter-spacing: 17px;
+    right: 68%;
+    top: 49%;
+    font-size: 79px;
+    width: max-content;
+    height: auto;
+
 }
