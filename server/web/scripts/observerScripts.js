@@ -3,15 +3,18 @@ let isIncorrectLength = false;
 let isIncorrectName = false;
 let isMatch = false;
 
+let ERROR = "ERROR";
+let INFO = "INFO";
 
 function onLoad() {
     let json = JSON.stringify({'action': 'load'});
+    logger(INFO, "Start loading cards from server");
     $.ajax({
         type: 'POST',
         url: 'doAction',
         data: json,
         success: function (response) {
-            console.log("Successful connection to server");
+            logger(INFO, "Successful connection to server and loading cards");
 
             $('title').text("Superhero Census - Observer");
             let json = JSON.parse(response);
@@ -21,7 +24,7 @@ function onLoad() {
             $(".page_center").fadeIn(1000);
         },
         error: function (response) {
-            console.log("Server is down");
+            logger(ERROR, response.responseText);
 
             $('title').text("Superhero Census - Observer");
             $("#preloader").fadeOut(1000);
@@ -31,12 +34,14 @@ function onLoad() {
 }
 
 function load_card_from_json(json, isHardUpdate) {
-    $(".grid_item_card").addClass("old");
+    let list = [];
+    if (isHardUpdate)
+        $(".grid_item_card").addClass("old");
 
     Object.keys(json).forEach(function (key) {
         let heroname = key;
         let values = json[key];
-        if (check_name(heroname)) {
+        if (check_name(heroname) || isHardUpdate) {
             let image_path = '';
             let universe = '';
             let power = '';
@@ -50,7 +55,7 @@ function load_card_from_json(json, isHardUpdate) {
                 power = values['power'];
             } else {
                 $(".grid_item_card:not(.old)").remove();
-                console.log("Incorrect json");
+                logger(ERROR, "Incorrect json format");
                 return;
             }
 
@@ -59,8 +64,18 @@ function load_card_from_json(json, isHardUpdate) {
             if (values.hasOwnProperty('alive')) is_alive = values['alive'];
             if (values.hasOwnProperty('phone')) phone = values['phone'];
 
-            image_path = check_img(image_path);
-            create_new_card(heroname, image_path, universe, power, desc, is_alive, phone);
+            let hero = hero_constructor(heroname, image_path, universe, power, desc, is_alive, phone);
+
+            let old = hero["alive"];
+            hero["image_path"] = check_img(image_path);
+            hero["alive"] === "Y" ? hero["alive"] = "checked" : false;
+            if (isHardUpdate) {
+                list.push(Object.create(hero));
+                hero["alive"] = old;
+
+            } else {
+                create_new_card(hero);
+            }
             $("input:not(#search), textarea").prop("disabled", true);
         }
     });
@@ -70,17 +85,22 @@ function load_card_from_json(json, isHardUpdate) {
             'action': 'hardUpdate',
             'data': json
         });
+        logger(INFO,"Start hard update");
         $.ajax({
             type: 'POST',
             url: 'doAction',
             data: req,
-            success: function (response) {
-                console.log("Hard update success finish");
+            success: function () {
+                logger(INFO, "Hard update success finish");
                 $(".old").remove();
+                for (let i = 0; i < list.length; i++) {
+                    create_new_card(list[i]);
+                }
+                $("input:not(#search), textarea").prop("disabled", true);
+
             },
             error: function (response) {
-                $(".grid_item_card:not(.old)").remove();
-                console.log("server shutdown");
+                logger(ERROR, response.responseText);
             }
         });
     }
@@ -94,11 +114,12 @@ $("#import_btn").click(function () {
 
 $("#dialog_import_accept").click(function () {
     $("#import_loader").prop("disabled", false);
-    document.getElementById("import_loader").click();
+    $("#import_loader").click();
     $("#dialog_import_cancel").click();
 });
 
 $("#dialog_import_cancel").click(function () {
+    $("#import_loader").prop("disabled", true);
     $(".page_center").toggleClass("hide_animation");
     $(".header").toggleClass("hide_animation");
     $("#import_modal_dialog").fadeOut(300);
@@ -114,7 +135,12 @@ $("#import_loader").on('change', function () {
             json = JSON.parse(fileReader.result);
             load_card_from_json(json, true);
         };
+        fileReader.readAsText(file);
+        $("#import_loader").prop("value", "");
+
     }
+    event.stopPropagation();
+
 });
 
 $("#export_btn").click(function () {
@@ -127,12 +153,13 @@ $("#export_btn").click(function () {
         let desc = $(this).find(".desc_input").val();
         let is_alive = $(this).find(".is_alive_input").val();
         let phone = $(this).find(".phone_input").val();
+        is_alive === "on" ? is_alive = "Y" : is_alive = "N";
         data[name] = {
             "image_path": image_path,
             "universe": universe,
             "power": power,
             "desc": desc,
-            "alive": is_alive === "on" ? "checked" : false,
+            "alive": is_alive,
             "phone": phone
         };
     });
@@ -247,24 +274,23 @@ $("#cancel_delete_btn").click(function () {
 
 function delete_cards_from_server() {
     let name = $(".choosed_for_delete").find(".card_name").text();
-    console.log("Delete - " + name);
 
     let json = JSON.stringify({
         'action': 'delete',
         'data': name
     });
-
+    logger(INFO, "Starting delete card " + name);
     $.ajax({
         method: 'POST',
         url: 'doAction',
         data: json,
         contentType: 'application/json',
         success: function () {
-            console.log("Delete finish success!");
+            logger(INFO, "Delete finish success!");
             $(".choosed_for_delete").remove();
         },
-        error: function () {
-            console.log("delete failed :C");
+        error: function (response) {
+            logger(ERROR, response.responseText);
             $(".draggable").removeClass("choosed_for_delete");
         }
     });
@@ -280,7 +306,6 @@ $("#add_param_heroname").keyup(function () {
         errorStringRemover(message_box, "Too big name");
         isIncorrectLength = false;
     }
-    console.log((/^[a-zA-Z_ ]+$/.test(heroname)));
     if(!isIncorrectName && !(/^[a-zA-Z_ ]+$/.test(heroname))) {
         message_box.append("Incorrect name<br><br>");
         isIncorrectName = true;
@@ -343,66 +368,56 @@ $("#add_card_btn").click(function () {
     }
 
     if (message_box.text() === "") {
+        let hero = hero_constructor(heroname, "img/unknown_hero.png", universe, power, desc, isAlive, phone);
 
-        let image_path;
         if (file != null && file.name !== "") {
-            image_uploader(heroname);
-            image_path = "img/" + heroname + ".jpg";
+            hero_uploader(hero);
         } else {
-            image_path = 'img/unknown_hero.png'
+            load_card_on_server(hero);
         }
-
-        let is_alive_checkbox;
-        let is_alive_param;
-        isAlive === "on"  ? is_alive_checkbox = "checked" : false;
-        isAlive === "on"  ? is_alive_param = "Y" : is_alive_param = "N";
-        create_new_card(heroname, image_path, universe, power, desc, is_alive_checkbox, phone);
-        load_card_on_server(heroname, image_path, universe, power, desc, is_alive_param, phone);
-        $("#cancel_adding_btn").click();
         setTimeout(function () {
             clear_inputs()
         }, 500);
-
     }
 });
 
-function create_new_card(name, file, universe, power, desc, isAlive, phone) {
+function create_new_card(hero) {
     $("#new_hero_card").before(
         "<div class=\"grid_item_card overturned draggable\">\n" +
-        "            <article id=\""+ name + "\" class=\"card flipper\">\n" +
+        "            <article id=\""+ hero["heroname"] + "\" class=\"card flipper\">\n" +
         "                <div class=\"front\">\n" +
         "                    <div class=\"card_head\">\n" +
-        "                        <span class='card_name'>"+ name + "</span>\n" +
+        "                        <span class='card_name'>"+ hero["heroname"] + "</span>\n" +
         "                        <a class=\"head_change_pencil\" onclick=\"\">\n" +
         "                            <img class=\"head_image\" alt=\"ChangeCardIcon\" src=\"img/pencil.png\">\n" +
         "                        </a>\n" +
         "                    </div>\n" +
         "                    <div class=\"hero_image_href\">\n" +
-        "                        <img class=\"hero_image\" alt=\""+ name +"\" src=\"" + file + "\" draggable=\"false\">\n" +
+        "                        <img class=\"hero_image\" alt=\""+ hero["heroname"] +"\" src=\"" + hero["image_path"] + "\" draggable=\"false\">\n" +
         "                    </div>\n" +
         "                    <div class=\"hero_desc\">\n" +
         "                        <label>\n" +
         "                            <strong>Universe</strong>\n" +
-        "                            <input type=\"text\" class=\"universe_input\" value=\""+ universe +"\">\n" +
+        "                            <input type=\"text\" class=\"universe_input\" value=\""+ hero["universe"] +"\">\n" +
         "                        </label>\n" +
         "                        <label>\n" +
         "                            <strong>Power</strong>\n" +
-        "                            <input type=\"number\" class=\"power_input\" value=\"" + power + "\">\n" +
+        "                            <input type=\"number\" class=\"power_input\" value=\"" + hero["power"] + "\">\n" +
         "                        </label>\n" +
         "                        <label>\n" +
         "                            <strong>Alive</strong>\n" +
-        "                            <input type=\"checkbox\" class=\"is_alive_input\" " + isAlive + ">\n" +
+        "                            <input type=\"checkbox\" class=\"is_alive_input\" " + hero["alive"] + ">\n" +
         "                        </label>\n" +
         "                        <label>\n" +
         "                            <strong>Phone</strong>\n" +
-        "                            <input type=\"text\" class=\"phone_input\" value=\"" + phone + "\">\n" +
+        "                            <input type=\"text\" class=\"phone_input\" value=\"" + hero["phone"] + "\">\n" +
         "                        </label>\n" +
         "                    </div>\n" +
         "                </div>\n" +
         "                <div class=\"back\">\n" +
         "                    <label>\n" +
         "                        <strong class='back_header'>Description</strong>\n" +
-        "                        <textarea class=\"desc_input\" rows='24'>" + desc + "</textarea>\n" +
+        "                        <textarea class=\"desc_input\" rows='24'>" + hero["desc"] + "</textarea>\n" +
         "                    </label>\n" +
         "                </div>\n" +
         "            </article>\n" +
@@ -446,44 +461,56 @@ function clear_inputs() {
     $("#add_param_phone").prop('value', null);
 }
 
-function load_card_on_server(heroname, image_path, universe, power, desc, isalive, phone) {
-    let hero_data = {
-        "heroname": heroname,
-        "image_path": image_path,
-        "universe": universe,
-        "power": power,
-        "desc": desc,
-        "alive": isalive,
-        "phone": phone
-    };
+function load_card_on_server(hero) {
+    let is_alive_checkbox;
+    if (hero["alive"] === "on") {
+        hero["alive"] = "Y";
+        is_alive_checkbox = "checked";
+    } else {
+        hero["alive"] = "N";
+        is_alive_checkbox = "";
+    }
 
     let json = JSON.stringify({
         'action': 'add',
-        'data': hero_data
+        'data': hero
     });
+
+    logger(INFO, "Sending card on server with name " + hero["heroname"]);
     $.ajax({
         method: 'POST',
         url: 'doAction',
         data: json,
         contentType: 'application/json',
-        dataType: 'json',
         success: function () {
-            console.log("Loading finish success!");
+            logger(INFO, "Loading finish success!");
+            hero["alive"] = is_alive_checkbox;
+            create_new_card(hero);
+            $("#cancel_adding_btn").click();
         },
-        error: function () {
-            console.log("Loading failed :C");
+        error: function (response) {
+            let msg = response.responseText;
+            logger(ERROR, msg);
+            $("#cancel_adding_btn").click();
+
+            if (msg.includes("UNIQUE constraint failed")) {
+                $(".page_center").toggleClass("hide_animation");
+                $(".header").toggleClass("hide_animation");
+                $('#error_add_dialog').show();
+                setTimeout(function () {location.reload()}, 10000);
+            }
         }
     });
 }
 
-function image_uploader(heroname) {
+function hero_uploader(hero) {
     let image_file = $("#fileloader").prop('files')[0];
     let form_data = new FormData();
-    let image_name = heroname;
+    let image_name = hero["heroname"];
     form_data.append('file', image_file);
     form_data.append('name', image_name);
 
-
+    logger(INFO, "Loading card on server");
     $.ajax({
         method: 'POST',
         url: 'doLoad',
@@ -492,10 +519,31 @@ function image_uploader(heroname) {
         processData: false,
         contentType: false,
         success: function () {
-            console.log("bad");
+            logger(INFO, "Image was uploaded");
+            hero["image_path"] = "img/" + image_name + ".jpg";
+            load_card_on_server(hero);
         },
-        error: function () {
-            console.log("good");
+        error: function (response) {
+            logger(ERROR, response.responseText);
+            hero["image_path"] = "img/unknown_hero.png";
+            load_card_on_server(hero);
         }
     });
+}
+
+function hero_constructor(heroname, image_path, universe, power, desc, is_alive, phone) {
+    return {
+        "heroname": heroname,
+        "image_path": image_path,
+        "universe": universe,
+        "power": power,
+        "desc": desc,
+        "alive": is_alive,
+        "phone": phone
+    }
+}
+
+function logger(type, text) {
+    let current_date = new Date();
+    console.log(current_date + " # " + type + ": " + text)
 }

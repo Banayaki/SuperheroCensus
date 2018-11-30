@@ -3,14 +3,15 @@ package serverService;
 import dbService.SessionExecutor;
 import dbService.entity.AbstractHeroEntity;
 import dbService.entity.SuperheroesEntitySQLite;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import javax.persistence.OptimisticLockException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -18,18 +19,30 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Основной используемы в приложении сервлет.
+ * Подразумевает наличие переданного параметра "action"
+ * "load" - отправляет серверу ответом все карточки, полученные из БД
+ * "change" - изменяет персонажа в БД
+ * "delete" - удаление персонажа из БД
+ * "add" - добавление персонажа в БД
+ * "hardUpdate" - удаляет всех героев из БД и добавляет новых
+ */
+@WebServlet(name = "ServletHandler", urlPatterns = {"/doAction"})
 public class ServletHandler extends HttpServlet {
+    private static Logger logger = LogManager.getLogger();
     private SessionExecutor executor;
     private HttpServletResponse response;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
         this.response = resp;
+        resp.setStatus(HttpServletResponse.SC_OK);
 
         executor = new SessionExecutor();
         StringBuilder stringBuilder = new StringBuilder();
         String line;
+        String action = null;
         BufferedReader reader = req.getReader();
 
         while ((line = reader.readLine()) != null)
@@ -37,7 +50,8 @@ public class ServletHandler extends HttpServlet {
 
         try {
             JSONObject json = new JSONObject(stringBuilder.toString());
-            String action = json.getString("action");
+            action = json.getString("action");
+            logger.info("POST Request, on /doAction with action: " + action);
 
             switch (action) {
                 case "load":
@@ -56,17 +70,17 @@ public class ServletHandler extends HttpServlet {
                 case "hardUpdate":
                     doHardUpdate(json.getJSONObject("data"));
                     break;
-                case "imageLoad":
-                    break;
                 default:
                     throw new UnsupportedOperationException();
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Error on " + action + " " + ex.getMessage());
+            resp.getWriter().write(ex.getMessage());
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
         }
     }
 
-    private void doHardUpdate(JSONObject json) {
+    private void doHardUpdate(JSONObject json) throws SQLException {
         executor.hardUpdateTable(createListOfHeroes(json));
     }
 
@@ -90,14 +104,7 @@ public class ServletHandler extends HttpServlet {
     }
 
     private void doChange(JSONObject json) throws SQLException, IOException {
-        try {
-            executor.changeHero(createHeroFromJSON(json));
-        } catch (OptimisticLockException ex) {
-            JSONObject jsonResponse = new JSONObject();
-            jsonResponse.put("data", ex.getMessage());
-            response.getWriter().write(jsonResponse.toString(4));
-            response.setStatus(HttpServletResponse.SC_CONFLICT);
-        }
+        executor.changeHero(createHeroFromJSON(json));
     }
 
     private void doDelete(String heroName) throws SQLException {
@@ -111,7 +118,7 @@ public class ServletHandler extends HttpServlet {
     private List<AbstractHeroEntity> createListOfHeroes(JSONObject json) {
         List<AbstractHeroEntity> heroList = new LinkedList<>();
 
-        for (Iterator iter = json.keys(); iter.hasNext();) {
+        for (Iterator iter = json.keys(); iter.hasNext(); ) {
             String key = (String) iter.next();
             JSONObject heroJson = json.getJSONObject(key);
             heroList.add(createHeroFromJSON(heroJson, key));

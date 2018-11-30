@@ -35,7 +35,7 @@
 <header class="header">
     <div class="header_field">
         <div class="navigation_bar header_content">
-            <div class="search_field white_text button">
+            <div class="search_field button">
                 <input id="search" type="text" placeholder="Search superhero">
             </div>
             <div class="sort_btns_group">
@@ -47,7 +47,6 @@
                 </a>
             </div>
             <div class="import_export_group">
-                <!-- Because <<The element input must not appear as a descendant of the a element.>> -->
                 <input type="file" id="import_loader" accept="image/png, image/jpeg" style="display: none">
                 <a id="import_btn" class="button">
                     <span>Import</span>
@@ -72,7 +71,7 @@
         </div>
         <div class="delete_mode header_content">
             <span class="white_text">
-                Now you're in delete mode. Drag and drop card in gray zone, what you want to delete!
+                Now you're in delete mode. Drag and drop card in delete zone.
             </span>
         </div>
         <div class="change_mode header_content">
@@ -129,6 +128,12 @@
             <span>Nope.</span>
         </a>
     </div>
+</div>
+
+<div id="error_add_dialog" class="modal_dialog">
+    <span id="DialogAddStr">
+        This hero already exist. Cards will be updated (10s)
+    </span>
 </div>
 
 <div class="page_center">

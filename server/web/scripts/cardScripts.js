@@ -6,6 +6,7 @@ let backup;
 let args;
 
 
+// noinspection JSJQueryEfficiency
 $("#grid").on("mousemove", function () {
     $(this).sortable({
         revert:true,
@@ -64,6 +65,7 @@ $("#dialog_delete_cancel").click(function () {
     $('#delete_modal_dialog').fadeOut(600);
 });
 
+// noinspection JSJQueryEfficiency
 $("#grid").on("mouseup", ".card_head, .back_header", function (event) {
     if ($(event.target).attr('class') !== "head_image" && !in_drag) {
         $(this).parents(".card").toggleClass("flip");
@@ -96,8 +98,8 @@ $("#cancel_changes_btn").click(function () {
     changed_card.replaceWith(backup);
     backup = "";
     changed_card = "";
-    $("input:not(#search)").prop("disabled", true);
-    $("input").removeClass("editable_input");
+    $("input:not(#search), textarea").prop("disabled", true);
+    $("input, textarea").removeClass("editable_input");
     $(".change_mode").fadeOut(400, function () {
         $(".navigation_bar").fadeIn(400)
     });
@@ -109,8 +111,8 @@ $("#cancel_changes_btn").click(function () {
 });
 
 $("#accept_changes").click(function () {
-    $("input").removeClass("editable_input");
-    $("input:not(#search)").prop("disabled", true);
+    $("input, textarea").removeClass("editable_input");
+    $("input:not(#search), textarea").prop("disabled", true);
 
     $(".change_mode").fadeOut(400, function () {
         $(".navigation_bar").fadeIn(400)
@@ -120,7 +122,7 @@ $("#accept_changes").click(function () {
 
     $("#grid").sortable("enable");
 
-
+    // TODO add limits
     let name = $(changed_card).find(".card_name").text();
     let image_path = $(changed_card).find(".hero_image").attr("src");
     let universe = $(changed_card).find(".universe_input").val();
@@ -144,24 +146,24 @@ $("#accept_changes").click(function () {
         'action': 'change',
         'data': data
     });
+
+    logger(INFO, "Change the card: " + name);
     $.ajax({
         method: 'POST',
         url: 'doAction',
         data: req,
-        dataType: "json",
         success: function () {
-            console.log("Change finish success!");
+            logger(INFO, "Change finish success!");
         },
         error: function (response) {
-            console.log("Change failed :C");
+            logger(ERROR, response.responseText);
             let error_msg = "Row was updated or deleted by another transaction";
-            let json = JSON.parse(response.responseText);
-            if (json['data'].includes(error_msg)) {
+            if (response.responseText.includes(error_msg)) {
+                changed_card.parents("grid_item_card").remove();
                 $(".page_center").toggleClass("hide_animation");
                 $(".header").toggleClass("hide_animation");
                 $('#error_change_dialog').show();
             } else {
-                console.log(json['data']);
                 changed_card.replaceWith(backup);
             }
         }
@@ -169,7 +171,6 @@ $("#accept_changes").click(function () {
 });
 
 $("#dialog_change_accept").click(function () {
-    changed_card.remove();
     $("#add_param_heroname").val(args['heroname']);
     $("#add_param_universe").val(args['universe']);
     $("#add_param_power").val(args['power']);
@@ -179,19 +180,20 @@ $("#dialog_change_accept").click(function () {
     $(".navigation_bar").fadeOut(400, function () {
         $(".add_mode").fadeIn(400)
     });
-    $(".page_center").fadeOut(400, function () {
+
+    let page_center = $(".page_center");
+    page_center.fadeOut(400, function () {
         $(".page_center_addhero").fadeIn(400, function () {
             $("input:not(#search), textarea").prop("disabled", false);
         });
     });
 
-    $(".page_center").toggleClass("hide_animation");
+    page_center.toggleClass("hide_animation");
     $(".header").toggleClass("hide_animation");
     $('#error_change_dialog').hide();
 });
 
 $("#dialog_change_cancel").click(function () {
-    changed_card.remove();
     $(".page_center").toggleClass("hide_animation");
     $(".header").toggleClass("hide_animation");
     $('#error_change_dialog').hide();

@@ -129,6 +129,7 @@ input {
 .white_text {
     color: white;
     font-weight: bold;
+    font-size: xx-large;
 }
 
 .modal_dialog {
@@ -290,6 +291,7 @@ textarea {
     top: 49%;
     font-size: 79px;
     width: max-content;
+    width: -moz-max-content;
     height: auto;
 
 }
