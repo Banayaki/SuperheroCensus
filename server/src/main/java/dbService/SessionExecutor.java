@@ -45,6 +45,9 @@ public class SessionExecutor implements UserDAO {
     }
 
     public void addNewHero(AbstractHeroEntity hero) throws SQLException, CallbackException {
+        String uniqMsg = "UNIQUE constraint failed";
+        String foreignMsg = "FOREIGN KEY constraint failed";
+
         logger.info("Trying to add new hero \"" + hero.getHeroName() + "\"");
         Transaction tx = null;
         try (Session session = sessionBuider.openNewSession()) {
@@ -56,10 +59,11 @@ public class SessionExecutor implements UserDAO {
             ex.printStackTrace();
             logger.error("Hero doesn't add " + ex.getMessage());
             if (tx != null) tx.rollback();
-            String uniqMsg = "UNIQUE constraint failed";
+
             if (ex.getCause().getCause().getMessage().contains(uniqMsg)) {
-                System.out.println("HERE");
                 throw new CallbackException(uniqMsg);
+            } else if (ex.getCause().getCause().getMessage().contains(foreignMsg)) {
+                throw new CallbackException(foreignMsg);
             }
         }
     }
