@@ -46,26 +46,28 @@ $("#delete_area, #trash_card_image").droppable({
     tolerance: "touch",
     drop: function (event, ui) {
         $(ui.draggable).addClass("choosed_for_delete");
-        hide_center_header();
-        $('#delete_modal_dialog').show();
+        toggle_center_header();
+        delete_dialog();
     }
 });
 
-$("#dialog_delete_accept").click(function () {
-    delete_cards_from_server();
-    hide_center_header();
-    $('#delete_modal_dialog').fadeOut(600);
-    $("#cancel_delete_btn").click();
-});
+function delete_dialog () {
+    $(".modal_dialog_text").text("Are you sure?");
+    $(".agree_button").on("click", function () {
+        delete_cards_from_server();
+        $(".disagree_button").click();
+    });
+    $(".disagree_button").on("click", function () {
+        toggle_center_header();
+        $(".modal_dialog").fadeOut(600);
+        $(".disagree_button, .agree_button").off();
+    });
 
-$("#dialog_delete_cancel").click(function () {
-    $(".choosed_for_delete").removeClass("choosed_for_delete");
-    hide_center_header();
-    $('#delete_modal_dialog').fadeOut(600);
-});
+    $(".modal_dialog").fadeIn(300);
+}
 
-// noinspection JSJQueryEfficiency
-$("#grid").on("mouseup", ".card_head, .back_header", function (event) {
+let grid = $("#grid");
+grid.on("mouseup", ".card_head, .back_header", function (event) {
     if ($(event.target).attr('class') !== "head_image" && !in_drag) {
         $(this).parents(".card").toggleClass("flip");
     }
@@ -93,6 +95,29 @@ $("div").on('click', ".head_change_pencil", function (event) {
 });
 
 $("#accept_changes").click(function () {
+    let name = $(changed_card).find(".card_name").text();
+    let image_path = $(changed_card).find(".hero_image").attr("src");
+    let universe = $(changed_card).find(".universe_input").val();
+    let power = $(changed_card).find(".power_input").val();
+    let desc = $(changed_card).find(".desc_input").val();
+    let is_alive = $(changed_card).find(".is_alive_input").val();
+    let phone = $(changed_card).find(".phone_input").val();
+
+    let error_msg = "";
+    if (!check_phone(phone)) {
+        error_msg += "Wrong phone number. ";
+    }
+    if (!check_power(power)) {
+        error_msg += "Wrong power value (0 <= power <= 100). ";
+    }
+    if (!check_universe(universe)) {
+        error_msg += "Wrong universe name. ";
+    }
+    if (error_msg !== "") {
+        change_dialog_edit_error(error_msg);
+        return;
+    }
+
     $("input, textarea").removeClass("editable_input");
     $("input:not(#search), textarea").prop("disabled", true);
 
@@ -103,20 +128,6 @@ $("#accept_changes").click(function () {
     $("#new_hero_card").fadeIn(400);
 
     $("#grid").sortable("enable");
-
-    // TODO add limits
-    let name = $(changed_card).find(".card_name").text();
-    let image_path = $(changed_card).find(".hero_image").attr("src");
-    let universe = $(changed_card).find(".universe_input").val();
-    let power = $(changed_card).find(".power_input").val();
-    let desc = $(changed_card).find(".desc_input").val();
-    let is_alive = $(changed_card).find(".is_alive_input").val();
-    let phone = $(changed_card).find(".phone_input").val();
-
-    // if (!check_phone(phone) || !check_power(power) || !check_universe(universe)) {
-    //     //TODO show dialog
-    //     return;
-    // }
 
     let data = {
         "heroname": name,
@@ -147,44 +158,84 @@ $("#accept_changes").click(function () {
             let error_msg = "Row was updated or deleted by another transaction";
             if (response.responseText.includes(error_msg)) {
                 changed_card.parents(".grid_item_card").remove();
-                $(".page_center").toggleClass("hide_animation");
-                $(".header").toggleClass("hide_animation");
-                $('#error_change_dialog').show();
+                change_dialog(error_msg);
             } else {
-                changed_card.replaceWith(backup);
+                change_dialog_generify(response.responseText)
             }
         }
     });
 });
 
-$("#dialog_change_accept").click(function () {
-    $("#add_param_heroname").val(args['heroname']);
-    $("#add_param_universe").val(args['universe']);
-    $("#add_param_power").val(args['power']);
-    $("#add_param_phone").val(args['phone']);
-    $("#add_param_desc").val(args['desc']);
-    $("#add_param_checkbox").attr('checked', args['alive'] === 'Y' ? "selected": "");
-    $(".navigation_bar").fadeOut(400, function () {
-        $(".add_mode").fadeIn(400)
+function change_dialog_edit_error(msg) {
+    $(".modal_dialog_text").text(msg);
+    $(".agree_button_text").text("OK");
+    $(".disagree_button").hide();
+    $(".agree_button").on("click", function () {
+
+        toggle_center_header();
+        $(".modal_dialog").fadeOut(300);
+        setTimeout(function () {
+            $(".agree_button_text").text("Yep!");
+            $(".disagree_button").show();
+        }, 300);
+        $(".agree_button").off();
     });
 
-    let page_center = $(".page_center");
-    page_center.fadeOut(400, function () {
-        $(".page_center_addhero").fadeIn(400, function () {
-            $("input:not(#search), textarea").prop("disabled", false);
+    toggle_center_header();
+    $(".modal_dialog").fadeIn(300);
+}
+
+function change_dialog_generify(msg) {
+    $(".modal_dialog_text").text("Server response with error: " + msg);
+    $(".agree_button_text").text("OK");
+    $(".disagree_button").hide();
+    $(".agree_button").on("click", function () {
+        changed_card.replaceWith(backup);
+
+        toggle_center_header();
+        $(".modal_dialog").fadeOut(300);
+        setTimeout(function () {
+            $(".agree_button_text").text("Yep!");
+            $(".disagree_button").show();
+        }, 300);
+    });
+    toggle_center_header();
+    $(".modal_dialog").fadeIn(300);
+}
+
+
+function change_dialog() {
+    $(".modal_dialog_text").text("Row was updated or deleted by another transaction. Would you add this card?");
+
+    $(".agree_button").on("click", function() {
+        $("#add_param_heroname").val(args['heroname']);
+        $("#add_param_universe").val(args['universe']);
+        $("#add_param_power").val(args['power']);
+        $("#add_param_phone").val(args['phone']);
+        $("#add_param_desc").val(args['desc']);
+        $("#add_param_checkbox").attr('checked', args['alive'] === 'Y' ? "selected": "");
+        $(".navigation_bar").fadeOut(400, function () {
+            $(".add_mode").fadeIn(400)
         });
+
+        let page_center = $(".page_center");
+        page_center.fadeOut(400, function () {
+            $(".page_center_addhero").fadeIn(400, function () {
+                $("input:not(#search), textarea").prop("disabled", false);
+            });
+        });
+
+        $(".disagree_button").click();
+    });
+    $(".disagree_button").on("click", function() {
+        toggle_center_header();
+        $(".modal_dialog").fadeOut(300);
+        $(".disagree_button, .agree_button").off();
     });
 
-    hide_center_header();
-
-    $('#error_change_dialog').hide();
-});
-
-$("#dialog_change_cancel").click(function () {
-    hide_center_header();
-
-    $('#error_change_dialog').hide();
-});
+    toggle_center_header();
+    $(".modal_dialog").fadeIn(300);
+}
 
 $("#cancel_changes_btn").click(function () {
     changed_card.replaceWith(backup);
@@ -251,9 +302,6 @@ $("#add_card_btn").click(function () {
     }
 });
 
-
-
-
 function load_card_on_server_default(hero) {
     let is_alive_checkbox;
     if (hero["alive"] === "on") {
@@ -287,15 +335,51 @@ function load_card_on_server_default(hero) {
             $("#cancel_adding_btn").click();
 
             if (msg.includes("UNIQUE constraint failed")) {
-                $(".page_center").toggleClass("hide_animation");
-                $(".header").toggleClass("hide_animation");
-                $('#error_add_dialog').show();
-                setTimeout(function () {location.reload()}, 10000);
+                add_unique_failed_dialog();
             } else if (msg.includes("FOREIGN KEY constraint failed")) {
+                add_foreign_failed_dialog();
                 //TODO foreign error handler
+                // Получить список доступных вселенных
             }
         }
     });
+}
+
+function add_unique_failed_dialog() {
+    $(".modal_dialog_text").text("UNIQUE constraint failed. Page will be reloaded");
+    $(".agree_button_text").text("OK");
+    $(".disagree_button_text").hide();
+    $(".agree_button").on("click", function () {
+        toggle_center_header();
+        $(".modal_dialog").fadeOut(300);
+        location.reload();
+        setTimeout(function () {
+            $(".agree_button_text").text("Yep!");
+            $(".disagree_button").show();
+        }, 300);
+        $(".agree_button").off();
+    });
+
+    toggle_center_header();
+    $(".modal_dialog").fadeIn(300);
+}
+
+function add_foreign_failed_dialog() {
+    $(".modal_dialog_text").text("Unknown universe");
+    $(".agree_button_text").text("OK");
+    $(".disagree_button").hide();
+    $(".agree_button").on("click", function () {
+        toggle_center_header();
+        $(".modal_dialog").fadeOut(300);
+        setTimeout(function () {
+            $(".agree_button_text").text("Yep!");
+            $(".disagree_button").show();
+        }, 300);
+        $(".agree_button").off();
+    });
+
+    toggle_center_header();
+    $(".modal_dialog").fadeIn(300);
 }
 
 function load_card_on_server(hero) {
@@ -321,8 +405,27 @@ function load_card_on_server(hero) {
         error: function (response) {
             logger(ERROR, response.responseText);
             hero["image_path"] = "img/unknown_hero.png";
+            image_loading_error_dialog();
             load_card_on_server_default(hero);
         }
     });
 }
 
+function image_loading_error_dialog() {
+    $(".modal_dialog_text").text("Image wasn't uploaded on server. Will be setup standard image");
+    $(".agree_button_text").text("OK");
+    $(".disagree_button").hide();
+    $(".agree_button").on("click", function () {
+
+        toggle_center_header();
+        $(".modal_dialog").fadeOut(300);
+        setTimeout(function () {
+            $(".agree_button_text").text("Yep!");
+            $(".disagree_button").show();
+        }, 300);
+        $(".agree_button").off();
+    });
+
+    toggle_center_header();
+    $(".modal_dialog").fadeIn(300);
+}

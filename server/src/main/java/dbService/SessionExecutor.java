@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.CallbackException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.sqlite.date.ExceptionUtils;
 
 import javax.persistence.NoResultException;
 import java.sql.SQLException;
@@ -46,7 +47,7 @@ public class SessionExecutor implements UserDAO {
 
     public void addNewHero(AbstractHeroEntity hero) throws SQLException, CallbackException {
         String uniqMsg = "UNIQUE constraint failed";
-        String foreignMsg = "FOREIGN KEY constraint failed";
+        String foreignMsg = "transient instance must be saved before";
 
         logger.info("Trying to add new hero \"" + hero.getHeroName() + "\"");
         Transaction tx = null;
@@ -57,13 +58,13 @@ public class SessionExecutor implements UserDAO {
             logger.info("New hero was added");
         } catch (Exception ex) {
             ex.printStackTrace();
-            logger.error("Hero doesn't add " + ex.getMessage());
-            if (tx != null) tx.rollback();
+            logger.error("Hero doesn't add, because: " + ex.getMessage());
 
-            if (ex.getCause().getCause().getMessage().contains(uniqMsg)) {
+            if (getRootCause(ex).contains(uniqMsg)) {
+                if (tx != null) tx.rollback();
                 throw new CallbackException(uniqMsg);
-            } else if (ex.getCause().getCause().getMessage().contains(foreignMsg)) {
-                throw new CallbackException(foreignMsg);
+            } else if (getRootCause(ex).contains(foreignMsg)) {
+                throw new CallbackException("FOREIGN KEY constraint failed");
             }
         }
     }
@@ -137,5 +138,13 @@ public class SessionExecutor implements UserDAO {
             ex.printStackTrace();
         }
         return list;
+    }
+
+    private String getRootCause(Throwable ex) {
+        Throwable cause = ex;
+        while (ex.getCause() != null) {
+            cause = cause.getCause();
+        }
+        return cause.getMessage();
     }
 }

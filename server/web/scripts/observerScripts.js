@@ -98,6 +98,7 @@ function load_card_from_json(json, isHardUpdate) {
 
             },
             error: function (response) {
+                //TODO reload page dialog (and print error message)
                 logger(ERROR, response.responseText);
             }
         });
@@ -105,23 +106,26 @@ function load_card_from_json(json, isHardUpdate) {
 }
 
 $("#import_btn").click(function () {
-    $(".page_center").toggleClass("hide_animation");
-    $(".header").toggleClass("hide_animation");
-    $("#import_modal_dialog").fadeIn(300);
+    import_dialog();
 });
 
-$("#dialog_import_accept").click(function () {
-    $("#import_loader").prop("disabled", false);
-    $("#import_loader").click();
-    $("#dialog_import_cancel").click();
-});
+function import_dialog() {
+    $(".modal_dialog_text").text("You definitely want to import?");
+    $(".agree_button").on("click", function () {
+        $("#import_loader").prop("disabled", false);
+        $("#import_loader").click();
+        $(".disagree_button").click();
+    });
+    $(".disagree_button").on("click", function (){
+        $("#import_loader").prop("disabled", true);
+        toggle_center_header();
+        $(".modal_dialog").fadeOut(300);
+        $(".disagree_button, .agree_button").off();
+    });
 
-$("#dialog_import_cancel").click(function () {
-    $("#import_loader").prop("disabled", true);
-    $(".page_center").toggleClass("hide_animation");
-    $(".header").toggleClass("hide_animation");
-    $("#import_modal_dialog").fadeOut(300);
-});
+    toggle_center_header();
+    $(".modal_dialog").fadeIn(300);
+}
 
 $("#import_loader").on('change', function () {
     let json;
@@ -138,7 +142,6 @@ $("#import_loader").on('change', function () {
 
     }
     event.stopPropagation();
-
 });
 
 $("#export_btn").click(function () {
@@ -396,13 +399,6 @@ function hero_constructor(heroname, image_path, universe, power, desc, is_alive,
     }
 }
 
-function hero_constructor_from_elem(element) {
-
-
-    return {}
-}
-
-
 function check_name(name) {
     let isEq = true;
     $.each($(".card_name"), function () {
@@ -415,7 +411,7 @@ function check_name(name) {
 }
 
 function check_universe(universe) {
-    // TODO check on server
+   return (/^\w+$/).test(universe);
 }
 
 function check_power(power) {
@@ -423,7 +419,7 @@ function check_power(power) {
 }
 
 function check_phone(phone) {
-    return (/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/.test(phone));
+    return phone === "" || (/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/.test(phone));
 }
 
 function logger(type, text) {
@@ -444,7 +440,7 @@ function check_img(url) {
     return url;
 }
 
-function hide_center_header() {
+function toggle_center_header() {
     $(".page_center").toggleClass("hide_animation");
     $(".header").toggleClass("hide_animation");
 }

@@ -89,51 +89,18 @@
 </header>
 
 <!--При появлении основная страаница затемняется-->
-<div id="delete_modal_dialog" class="modal_dialog">
-    <span id="DialogDeleteStr">Are you sure?</span>
-    <div class="modal_btns_group">
-        <a id="dialog_delete_accept" class="button" onclick="">
-            <span>Yep!</span>
-        </a>
-        <a id="dialog_delete_cancel" class="button" onclick="">
-            <span>Nope.</span>
-        </a>
-    </div>
-</div>
+<div class="modal_dialog">
+    <span class="modal_dialog_text">
 
-<div id="import_modal_dialog" class="modal_dialog">
-    <span id="DialogImportStr">
-        If you're import this JSON, then remove all current cards.
-        <br>You definitely want to import?</span>
-    <div class="modal_btns_group">
-        <a id="dialog_import_accept" class="button" onclick="">
-            <span>Yep!</span>
-        </a>
-        <a id="dialog_import_cancel" class="button" onclick="">
-            <span>Nope.</span>
-        </a>
-    </div>
-</div>
-
-<div id="error_change_dialog" class="modal_dialog">
-    <span id="DialogChangeStr">
-        Row was updated or deleted by another user.<br>
-        Do you wanna add this card again? Else, this card will be deleted.
     </span>
     <div class="modal_btns_group">
-        <a id="dialog_change_accept" class="button">
-            <span>Yep!</span>
+        <a class="button agree_button">
+            <span class="agree_button_text">Yep!</span>
         </a>
-        <a id="dialog_change_cancel" class="button">
-            <span>Nope.</span>
+        <a class="button disagree_button">
+            <span class="disagree_button_text">Nope.</span>
         </a>
     </div>
-</div>
-
-<div id="error_add_dialog" class="modal_dialog">
-    <span id="DialogAddStr">
-        This hero already exist. Cards will be updated (10s)
-    </span>
 </div>
 
 <div class="page_center">

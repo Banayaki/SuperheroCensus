@@ -18,6 +18,8 @@ public class SessionBuider {
         Configuration config = new Configuration()
                 .addResource("hibernate.cfg.xml")
                 .addResource("SuperheroesEntitySQLite.hbm.xml")
+                .addResource("UniversesList.hbm.xml")
+                .addResource("Boolstates.hbm.xml")
                 .configure();
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(config.getProperties())

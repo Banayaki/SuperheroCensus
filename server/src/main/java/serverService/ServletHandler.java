@@ -2,7 +2,9 @@ package serverService;
 
 import dbService.SessionExecutor;
 import dbService.entity.AbstractHeroEntity;
+import dbService.entity.BooleanStateEntity;
 import dbService.entity.SuperheroesEntitySQLite;
+import dbService.entity.UniverseEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -92,10 +94,10 @@ public class ServletHandler extends HttpServlet {
             JSONObject heroJson = new JSONObject();
 
             heroJson.put("image_path", hero.getImagePath());
-            heroJson.put("universe", hero.getUniverse());
+            heroJson.put("universe", hero.getUniverse().toString());
             heroJson.put("power", hero.getPower());
             heroJson.put("desc", hero.getDescription());
-            heroJson.put("alive", hero.getIsAlive().equals("Y") ? "checked" : "");
+            heroJson.put("alive", hero.getIsAlive().toString().equals("Y") ? "checked" : "");
             heroJson.put("phone", hero.getPhone());
 
             json.put(hero.getHeroName(), heroJson);
@@ -138,8 +140,8 @@ public class ServletHandler extends HttpServlet {
         hero.setHeroName(json.getString("heroname"));
         hero.setDescription(json.getString("desc"));
         hero.setImagePath(json.getString("image_path"));
-        hero.setUniverse(json.getString("universe"));
-        hero.setIsAlive(json.getString("alive"));
+        hero.setUniverse(new UniverseEntity(json.getString("universe")));
+        hero.setIsAlive(new BooleanStateEntity(json.getString("alive")));
         hero.setPhone(json.getString("phone"));
         hero.setPower((byte) json.getInt("power"));
 

@@ -9,10 +9,10 @@ import java.io.Serializable;
 public class SuperheroesEntitySQLite extends AbstractHeroEntity implements Serializable {
     private short heroId;
     private String heroName;
-    private String universe;
+    private UniverseEntity universe;
     private byte power;
     private String description;
-    private String isAlive;
+    private BooleanStateEntity isAlive;
     private String imagePath;
     private String phone;
 
@@ -20,8 +20,8 @@ public class SuperheroesEntitySQLite extends AbstractHeroEntity implements Seria
 
     }
 
-    public SuperheroesEntitySQLite(short heroId, String heroName, String universe, byte power, String description,
-                                   String isAlive, String imagePath, String phone) {
+    public SuperheroesEntitySQLite(short heroId, String heroName, UniverseEntity universe, byte power, String description,
+                                   BooleanStateEntity isAlive, String imagePath, String phone) {
         this.heroId = heroId;
         this.heroName = heroName;
         this.universe = universe;
@@ -56,13 +56,14 @@ public class SuperheroesEntitySQLite extends AbstractHeroEntity implements Seria
 
     @Basic
     @Column(name = "UNIVERSE", nullable = false)
+    @JoinColumn(name = "universe_name", table = "UNIVERSES")
     @Override
-    public String getUniverse() {
+    public UniverseEntity getUniverse() {
         return universe;
     }
 
     @Override
-    public void setUniverse(String universe) {
+    public void setUniverse(UniverseEntity universe) {
         this.universe = universe;
     }
 
@@ -92,13 +93,14 @@ public class SuperheroesEntitySQLite extends AbstractHeroEntity implements Seria
 
     @Basic
     @Column(name = "IS_ALIVE", nullable = false)
+    @JoinColumn(name = "bool_state", table = "BOOL_STATES")
     @Override
-    public String getIsAlive() {
+    public BooleanStateEntity getIsAlive() {
         return isAlive;
     }
 
     @Override
-    public void setIsAlive(String isAlive) {
+    public void setIsAlive(BooleanStateEntity isAlive) {
         this.isAlive = isAlive;
     }
 

@@ -8,23 +8,25 @@
         <id name="heroName">
             <column name="HERO_NAME" sql-type="text" not-null="true"/>
         </id>
-        <property name="universe">
-            <column name="UNIVERSE" sql-type="text" not-null="true"/>
-        </property>
+
+        <many-to-one name="universe" class="dbService.entity.UniverseEntity" column="UNIVERSE" not-null="true" cascade="none"/>
+
         <property name="power">
             <column name="POWER" sql-type="integer" not-null="true"/>
         </property>
         <property name="description">
             <column name="DESCRIPTION" sql-type="text" />
         </property>
-        <property name="isAlive">
-            <column name="IS_ALIVE" sql-type="text" />
-        </property>
+
+        <many-to-one name="isAlive" class="dbService.entity.BooleanStateEntity" column="IS_ALIVE" not-null="true" cascade="none"/>
+
         <property name="imagePath">
             <column name="IMAGE_PATH" sql-type="text" />
         </property>
         <property name="phone">
             <column name="PHONE" sql-type="text"  />
         </property>
+        
+
     </class>
 </hibernate-mapping>

@@ -9,10 +9,10 @@ import java.io.Serializable;
 public class SuperheroesEntityOracle extends AbstractHeroEntity implements Serializable {
     private short heroId;
     private String heroName;
-    private String universe;
+    private UniverseEntity universe;
     private byte power;
     private String description;
-    private String isAlive;
+    private BooleanStateEntity isAlive;
     private String imagePath;
     private String phone;
 
@@ -20,8 +20,8 @@ public class SuperheroesEntityOracle extends AbstractHeroEntity implements Seria
 
     }
 
-    public SuperheroesEntityOracle(short heroId, String heroName, String universe, byte power, String description,
-                                   String isAlive, String imagePath, String phone) {
+    public SuperheroesEntityOracle(short heroId, String heroName, UniverseEntity universe, byte power, String description,
+                                   BooleanStateEntity isAlive, String imagePath, String phone) {
         this.heroId = heroId;
         this.heroName = heroName;
         this.universe = universe;
@@ -59,12 +59,12 @@ public class SuperheroesEntityOracle extends AbstractHeroEntity implements Seria
     @Basic
     @Column(name = "UNIVERSE", nullable = false, length = 20)
     @Override
-    public String getUniverse() {
+    public UniverseEntity getUniverse() {
         return universe;
     }
 
     @Override
-    public void setUniverse(String universe) {
+    public void setUniverse(UniverseEntity universe) {
         this.universe = universe;
     }
 
@@ -95,12 +95,12 @@ public class SuperheroesEntityOracle extends AbstractHeroEntity implements Seria
     @Basic
     @Column(name = "IS_ALIVE", nullable = false, length = 1)
     @Override
-    public String getIsAlive() {
+    public BooleanStateEntity getIsAlive() {
         return isAlive;
     }
 
     @Override
-    public void setIsAlive(String isAlive) {
+    public void setIsAlive(BooleanStateEntity isAlive) {
         this.isAlive = isAlive;
     }
 

@@ -10,9 +10,9 @@ public abstract class AbstractHeroEntity {
 
     public abstract void setHeroName(String heroName);
 
-    public abstract String getUniverse();
+    public abstract UniverseEntity getUniverse();
 
-    public abstract void setUniverse(String universe);
+    public abstract void setUniverse(UniverseEntity universe);
 
     public abstract byte getPower();
 
@@ -22,9 +22,9 @@ public abstract class AbstractHeroEntity {
 
     public abstract void setDescription(String description);
 
-    public abstract String getIsAlive();
+    public abstract BooleanStateEntity getIsAlive();
 
-    public abstract void setIsAlive(String isAlive);
+    public abstract void setIsAlive(BooleanStateEntity isAlive);
 
     public abstract String getImagePath();
 
