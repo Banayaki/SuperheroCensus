@@ -6,6 +6,7 @@ import java.io.Serializable;
 @SuppressWarnings("DefaultAnnotationParam")
 @Entity
 @Table(name = "SUPERHEROES")
+@Deprecated
 public class SuperheroesEntityOracle extends AbstractHeroEntity implements Serializable {
     private short heroId;
     private String heroName;

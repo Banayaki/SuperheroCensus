@@ -66,7 +66,7 @@ function delete_dialog () {
     $(".modal_dialog").fadeIn(300);
 }
 
-let grid = $("#grid");
+let grid = $("body");
 grid.on("mouseup", ".card_head, .back_header", function (event) {
     if ($(event.target).attr('class') !== "head_image" && !in_drag) {
         $(this).parents(".card").toggleClass("flip");
@@ -281,7 +281,7 @@ $("#add_card_btn").click(function () {
     if (!(/^[a-zA-Z]+$/.test(universe))) {
         message_box.append("Incorrect universe name<br><br>");
     }
-    if (!(power >= 0 && power <= 100)) {
+    if (power == null || !(power >= 0 && power <= 100)) {
         message_box.append("Incorrect power value<br><br>");
     }
     if (phone !== "" && !(/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/.test(phone))) {

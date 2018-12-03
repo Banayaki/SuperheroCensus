@@ -6,6 +6,8 @@ let isMatch = false;
 let ERROR = "ERROR";
 let INFO = "INFO";
 
+let others = [];
+
 function onLoad() {
     let json = JSON.stringify({'action': 'load'});
     logger(INFO, "Start loading cards from server");
@@ -18,7 +20,7 @@ function onLoad() {
 
             $('title').text("Superhero Census - Observer");
             let json = JSON.parse(response);
-            load_card_from_json(json, false);
+            card_loader(json);
             $("#preloader").fadeOut(1000);
             $(".header").fadeIn(1000);
             $(".page_center").fadeIn(1000);
@@ -33,75 +35,89 @@ function onLoad() {
     });
 }
 
-function load_card_from_json(json, isHardUpdate) {
-    let list = [];
-    if (isHardUpdate)
-        $(".grid_item_card").addClass("old");
+function load_cards_from_json(json) {
+    let cards = [];
 
     Object.keys(json).forEach(function (key) {
         let heroname = key;
         let values = json[key];
-        if (check_name(heroname) || isHardUpdate) {
-            let image_path = '';
-            let universe = '';
-            let power = '';
-            let desc = '';
-            let is_alive = '';
-            let phone = '';
+        let image_path = '';
+        let universe = '';
+        let power = '';
+        let desc = '';
+        let is_alive = '';
+        let phone = '';
 
-
-            if (values.hasOwnProperty('universe') && values.hasOwnProperty('power')) {
-                universe = values['universe'];
-                power = values['power'];
-            } else {
-                $(".grid_item_card:not(.old)").remove();
-                logger(ERROR, "Incorrect json format");
-                return;
-            }
-
-            if (values.hasOwnProperty('image_path')) image_path = check_img(values['image_path']);
-            if (values.hasOwnProperty('desc')) desc = values['desc'];
-            if (values.hasOwnProperty('alive')) is_alive = values['alive'];
-            if (values.hasOwnProperty('phone')) phone = values['phone'];
-
-            let hero = hero_constructor(heroname, image_path, universe, power, desc, is_alive, phone);
-
-            hero["image_path"] = check_img(image_path);
-            if (isHardUpdate) {
-                list.push(Object.create(hero));
-            } else {
-                create_new_card(hero);
-            }
-            $("input:not(#search), textarea").prop("disabled", true);
+        if (values.hasOwnProperty('universe') && values.hasOwnProperty('power')) {
+            universe = values['universe'];
+            power = values['power'];
+        } else {
+            $(".grid_item_card:not(.old)").remove();
+            logger(ERROR, "Incorrect json format");
+            return;
         }
+
+        if (values.hasOwnProperty('image_path')) image_path = check_img(values['image_path']);
+        if (values.hasOwnProperty('desc')) desc = values['desc'];
+        if (values.hasOwnProperty('alive')) is_alive = values['alive'];
+        if (values.hasOwnProperty('phone')) phone = values['phone'];
+
+        let hero = hero_constructor(heroname, image_path, universe, power, desc, is_alive, phone);
+
+        hero["image_path"] = check_img(image_path);
+        cards.push(hero);
     });
+    return cards;
+}
 
-    if (isHardUpdate) {
-        let req = JSON.stringify({
-            'action': 'hardUpdate',
-            'data': json
-        });
-        logger(INFO, "Start hard update");
-        $.ajax({
-            type: 'POST',
-            url: 'doAction',
-            data: req,
-            success: function () {
-                logger(INFO, "Hard update success finish");
-                $(".old").remove();
-                for (let i = 0; i < list.length; i++) {
-                    let item = list[i];
-                    item["alive"] === "Y" ? item["alive"] = "checked" : false;
-                    create_new_card(list[i]);
-                }
-                $("input:not(#search), textarea").prop("disabled", true);
+function card_loader(json) {
+    let cards = load_cards_from_json(json);
+    for (let index = 0; index < cards.length; index++) {
+        if (check_name(cards[index]["heroname"])) create_new_card(cards[index]);
+    }
+    $("input:not(#search), textarea").prop("disabled", true);
+}
 
-            },
-            error: function (response) {
-                //TODO reload page dialog (and print error message)
-                logger(ERROR, response.responseText);
-            }
-        });
+function import_loading(json) {
+
+    let cards = load_cards_from_json(json);
+    for (let index = 0; index < cards.length; index++) {
+        if (check_name(cards[index]["heroname"])) create_new_card(cards[index]);
+        else others.push(cards[index]);
+    }
+    $(".complex_dialog_text").text("Choose your's or server cards, what you wanna use");
+    $(".complex_modal_dialog").on("click", ".preloaded_card", function () {
+        let name = $(this).find(".card_name").text();
+        $("#" + name).parents(".grid_item_card").replaceWith(this);
+        $(this).removeClass(".preloaded_card");
+        $(".preloaded_card").remove();
+        compare_heroes();
+    });
+    compare_heroes();
+}
+
+function compare_heroes() {
+    while (others.length !== 0) {
+        let current = others.pop();
+
+        let name = $("#" + current["heroname"]).find(".card_name").text();
+        let image_path = $("#" + current["heroname"]).find(".hero_image").attr("src");
+        let universe = $("#" + current["heroname"]).find(".universe_input").val();
+        let power = $("#" + current["heroname"]).find(".power_input").val();
+        let desc = $("#" + current["heroname"]).find(".desc_input").val();
+        let is_alive = $("#" + current["heroname"]).find(".is_alive_input").prop("checked");
+        let phone = $("#" + current["heroname"]).find(".phone_input").val();
+
+        if (image_path !== current["image_path"] || universe !== current["universe"] || power !== current["power"]
+            || desc !== current["desc"] || is_alive !== current["is_alive"] || phone !== current["phone"]) {
+            preload_card(hero_constructor(name, image_path, universe, power, desc, is_alive, phone));
+            preload_card(current);
+            $("input:not(#search), textarea").prop("disabled", true);
+
+            toggle_center_header();
+            $(".complex_modal_dialog").show();
+            return;
+        }
     }
 }
 
@@ -134,8 +150,9 @@ $("#import_loader").on('change', function () {
     if (file.type === "application/json") {
         fileReader.onload = function () {
             // noinspection JSCheckFunctionSignatures
+            //TODO диалог если не запарсил
             json = JSON.parse(fileReader.result);
-            load_card_from_json(json, true);
+            import_loading(json);
         };
         fileReader.readAsText(file);
         $("#import_loader").prop("value", "");
@@ -332,6 +349,50 @@ function errorStringRemover(msgBox, errorMsg) {
     msgBox.text(left + right);
 }
 
+function preload_card(hero) {
+    $(".complex_content").append(
+        '<div class="grid_item_card overturned preloaded_card">\n' +
+        '            <article class="card flipper">\n' +
+        '                <div class="front">\n' +
+        '                    <div class="card_head">\n' +
+        '                        <span class="card_name">' + hero["heroname"]+ '</span>\n' +
+        '                        <a class="head_change_pencil">\n' +
+        '                            <img class="head_image" alt="ChangeCardIcon" src="img/pencil.png">\n' +
+        '                        </a>\n' +
+        '                    </div>\n' +
+        '                    <div class="hero_image_href">\n' +
+        '                        <img class="hero_image" alt="Hero Image" src="'+ hero["image_path"] + '">\n' +
+        '                    </div>\n' +
+        '                    <div class="hero_desc">\n' +
+        '                        <label>\n' +
+        '                            <strong>Universe</strong>\n' +
+        '                            <input type="text" class="universe_input" value="' + hero["universe"] +'">\n' +
+        '                        </label>\n' +
+        '                        <label>\n' +
+        '                            <strong>Power</strong>\n' +
+        '                            <input type="text" class="power_input" value="' + hero["power"] +'">\n' +
+        '                        </label>\n' +
+        '                        <label>\n' +
+        '                            <strong>Alive</strong>\n' +
+        '                            <input type="checkbox" class="is_alive_input" value="' + hero["alive"] +'">\n' +
+        '                        </label>\n' +
+        '                        <label>\n' +
+        '                            <strong>Phone</strong>\n' +
+        '                            <input type="text" class="phone_input" value="' + hero["phone"] +'">\n' +
+        '                        </label>\n' +
+        '                    </div>\n' +
+        '                </div>\n' +
+        '                <div class="back">\n' +
+        '                    <label>\n' +
+        '                        <strong class="back_header">Description</strong>\n' +
+        '                        <textarea class="desc_input" rows="14">' + hero["desc"] +'</textarea>\n' +
+        '                    </label>\n' +
+        '                </div>\n' +
+        '            </article>\n' +
+        '        </div>'
+    );
+}
+
 function create_new_card(hero) {
     $("#new_hero_card").before(
         "<div class=\"grid_item_card overturned draggable\">\n" +
@@ -401,12 +462,10 @@ function hero_constructor(heroname, image_path, universe, power, desc, is_alive,
 
 function check_name(name) {
     let isEq = true;
-    $.each($(".card_name"), function () {
-        if ($(this).text() === name) {
-            isEq = false;
-
-        }
-    });
+    if ($("article").is("#" + name)) {
+        isEq = false;
+        return isEq;
+    }
     return isEq;
 }
 

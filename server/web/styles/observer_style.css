@@ -132,7 +132,7 @@ input {
     font-size: large;
 }
 
-.modal_dialog {
+.modal_dialog, .complex_modal_dialog {
     background-color: #35373b;
 
     padding: 10px;

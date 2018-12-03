@@ -190,3 +190,33 @@
     transition: opacity 1s;
     opacity: 0.1;
 }
+
+.preloaded_card {
+    width: 240px;
+    height: 377px;
+}
+
+
+.preloaded_card>.card>.front>.card_head>.card_name, .preloaded_card>.card>.back>* {
+    color: black;
+}
+
+.preloaded_card>.card>.front, .preloaded_card>.card>.back{
+    padding: 12px;
+}
+
+.preloaded_card>.card>.front>.hero_desc>label {
+    padding-bottom: 0;
+    padding-top: 0;
+    height: 15px;
+    color: black;
+    font-size: medium;
+}
+
+.preloaded_card>.card>.front>.hero_desc>label>input {
+    width: 125px;
+}
+
+.preloaded_card>.card>.front>.card_head>.head_change_pencil {
+    display: none;
+}
