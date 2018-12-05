@@ -54,7 +54,7 @@ public class SuperheroesEntitySQLite extends AbstractHeroEntity implements Seria
         this.heroName = heroName;
     }
 
-    @Basic
+    @ManyToOne
     @Column(name = "UNIVERSE", nullable = false)
     @JoinColumn(name = "universe_name", table = "UNIVERSES")
     @Override
@@ -91,7 +91,7 @@ public class SuperheroesEntitySQLite extends AbstractHeroEntity implements Seria
         this.description = description;
     }
 
-    @Basic
+    @ManyToOne
     @Column(name = "IS_ALIVE", nullable = false)
     @JoinColumn(name = "bool_state", table = "BOOL_STATES")
     @Override

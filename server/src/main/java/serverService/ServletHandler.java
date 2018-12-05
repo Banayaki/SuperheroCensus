@@ -7,6 +7,7 @@ import dbService.entity.SuperheroesEntitySQLite;
 import dbService.entity.UniverseEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
@@ -61,13 +62,13 @@ public class ServletHandler extends HttpServlet {
                     resp.getWriter().write(result);
                     break;
                 case "change":
-                    doChange(json.getJSONObject("data"));
+                    doChange(json.getJSONArray("data"));
                     break;
                 case "delete":
                     doDelete(json.getString("data"));
                     break;
                 case "add":
-                    doAdd(json.getJSONObject("data"));
+                    doAdd(json.getJSONArray("data"));
                     break;
                 case "hardUpdate":
                     doHardUpdate(json.getJSONObject("data"));
@@ -105,16 +106,16 @@ public class ServletHandler extends HttpServlet {
         return json;
     }
 
-    private void doChange(JSONObject json) throws SQLException, IOException {
-        executor.changeHero(createHeroFromJSON(json));
+    private void doChange(JSONArray json) throws SQLException, IOException {
+        executor.changeHero(createHeroesFromJSONArray(json));
     }
 
     private void doDelete(String heroName) throws SQLException {
         executor.deleteHero(heroName);
     }
 
-    private void doAdd(JSONObject json) throws SQLException {
-        executor.addNewHero(createHeroFromJSON(json));
+    private void doAdd(JSONArray json) throws SQLException {
+        executor.addNewHero(createHeroesFromJSONArray(json));
     }
 
     private List<AbstractHeroEntity> createListOfHeroes(JSONObject json) {
@@ -124,6 +125,14 @@ public class ServletHandler extends HttpServlet {
             String key = (String) iter.next();
             JSONObject heroJson = json.getJSONObject(key);
             heroList.add(createHeroFromJSON(heroJson, key));
+        }
+        return heroList;
+    }
+
+    private List<AbstractHeroEntity> createHeroesFromJSONArray(JSONArray jsonArray) {
+        List<AbstractHeroEntity> heroList = new LinkedList<>();
+        for (Object heroJson: jsonArray) {
+            heroList.add(createHeroFromJSON((JSONObject) heroJson));
         }
         return heroList;
     }

@@ -6,15 +6,15 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-public class SessionBuider {
-    private static SessionBuider instance = new SessionBuider();
+public class SessionBuilder {
+    private static SessionBuilder instance = new SessionBuilder();
     private final SessionFactory sessionFactory;
 
-    public static SessionBuider getInstance() {
+    public static SessionBuilder getInstance() {
         return instance;
     }
 
-    private SessionBuider() {
+    private SessionBuilder() {
         Configuration config = new Configuration()
                 .addResource("hibernate.cfg.xml")
                 .addResource("SuperheroesEntitySQLite.hbm.xml")
@@ -29,6 +29,13 @@ public class SessionBuider {
     }
 
     public Session openNewSession() {
-        return sessionFactory.openSession();
+
+        Session session;
+        if (sessionFactory.isClosed()) {
+            session = sessionFactory.openSession();
+        } else {
+            session = sessionFactory.getCurrentSession();
+        }
+        return session;
     }
 }

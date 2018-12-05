@@ -2,14 +2,14 @@
 <!DOCTYPE hibernate-mapping PUBLIC
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<hibernate-mapping>
+<hibernate-mapping package="dbService.entity">
 
     <class name="dbService.entity.SuperheroesEntitySQLite" table="SUPERHEROES">
         <id name="heroName">
             <column name="HERO_NAME" sql-type="text" not-null="true"/>
         </id>
 
-        <many-to-one name="universe" class="dbService.entity.UniverseEntity" column="UNIVERSE" not-null="true" cascade="none"/>
+        <many-to-one name="universe" class="dbService.entity.UniverseEntity" column="UNIVERSE" foreign-key="UNIVERSE_NAME" not-null="true" cascade="none" fetch="join"/>
 
         <property name="power">
             <column name="POWER" sql-type="integer" not-null="true"/>
@@ -18,7 +18,7 @@
             <column name="DESCRIPTION" sql-type="text" />
         </property>
 
-        <many-to-one name="isAlive" class="dbService.entity.BooleanStateEntity" column="IS_ALIVE" not-null="true" cascade="none"/>
+        <many-to-one name="isAlive" class="dbService.entity.BooleanStateEntity" column="IS_ALIVE" foreign-key="BOOL_STATE" not-null="true" cascade="none" fetch="join"/>
 
         <property name="imagePath">
             <column name="IMAGE_PATH" sql-type="text" />

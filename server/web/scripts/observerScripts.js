@@ -6,7 +6,11 @@ let isMatch = false;
 let ERROR = "ERROR";
 let INFO = "INFO";
 
+let was_in_compare;
 let others = [];
+let current;
+let added = [];
+let changed = [];
 
 function onLoad() {
     let json = JSON.stringify({'action': 'load'});
@@ -79,69 +83,106 @@ function card_loader(json) {
 }
 
 function import_loading(json) {
-
+    was_in_compare = false;
     let cards = load_cards_from_json(json);
     for (let index = 0; index < cards.length; index++) {
-        if (check_name(cards[index]["heroname"])) create_new_card(cards[index]);
+        if (check_name(cards[index]["heroname"])) {
+            let checkbox = cards[index]["alive"];
+            cards[index]["alive"] === "Y" ? cards[index]["alive"] = "checked" : cards[index]["alive"] = "";
+            create_new_card(cards[index]);
+            cards[index]["alive"] = checkbox;
+            added.push(cards[index]);
+        } 
         else others.push(cards[index]);
     }
     $(".complex_dialog_text").text("Choose your's or server cards, what you wanna use");
-    $(".complex_modal_dialog").on("click", ".preloaded_card", function () {
-        let name = $(this).find(".card_name").text();
-        $("#" + name).parents(".grid_item_card").replaceWith(this);
-        $(this).removeClass(".preloaded_card");
+    $(".right_to_all_btn").on("click", function () {
+        if (was_in_compare) {
+            let id = current["heroname"].replace(" ", "_");
+            $("#" + id).parents(".grid_item_card").remove();
+            let checkbox;
+            current["alive"] === "checked" ? checkbox = "Y" : checkbox = "N";
+            create_new_card(current);
+            current["alive"] = checkbox;
+            changed.push(current);
+        }
+        for (let index = 0; index < others.length; index++) {
+            let checkbox = others[index]["alive"];
+            others[index]["alive"] === "Y" ? others[index]["alive"] = "checked" : others[index]["alive"] = "";
+            let id = others[index]["heroname"].replace(" ", "_");
+            $("#" + id).parents(".grid_item_card").remove();
+            create_new_card(others[index]);
+            others[index]["alive"] = checkbox;
+            changed.push(others[index]);
+        }
+        $(".preloaded_card").remove();
+        $(".complex_modal_dialog").hide();
+        $("input:not(#search), textarea").prop("disabled", true);
+        success_import_dialog();
+    });
+
+    $(".left_to_all_btn").on("click", function () {
+        $(".preloaded_card").remove();
+        $(".complex_modal_dialog").hide();
+        $("input:not(#search), textarea").prop("disabled", true);
+        success_import_dialog();
+    });
+
+    $(".right_btn").on("click", function () {
+        $(".preloaded_card").remove();
+        let id = current["heroname"].replace(" ", "_");
+        $("#" + id).parents(".grid_item_card").remove();
+        create_new_card(current);
+        changed.push(current);
+        compare_heroes();
+    });
+
+    $(".left_btn").on("click", function () {
         $(".preloaded_card").remove();
         compare_heroes();
     });
+    toggle_center_header();
+    $(".complex_modal_dialog").fadeIn(300);
     compare_heroes();
 }
 
 function compare_heroes() {
     while (others.length !== 0) {
-        let current = others.pop();
 
-        let name = $("#" + current["heroname"]).find(".card_name").text();
-        let image_path = $("#" + current["heroname"]).find(".hero_image").attr("src");
-        let universe = $("#" + current["heroname"]).find(".universe_input").val();
-        let power = $("#" + current["heroname"]).find(".power_input").val();
-        let desc = $("#" + current["heroname"]).find(".desc_input").val();
-        let is_alive = $("#" + current["heroname"]).find(".is_alive_input").prop("checked");
-        let phone = $("#" + current["heroname"]).find(".phone_input").val();
+        current = others.pop();
+        let id = current["heroname"].replace(" ", "_");
+
+        let name = $("#" + id).find(".card_name").text();
+        let image_path = $("#" + id).find(".hero_image").attr("src");
+        let universe = $("#" + id).find(".universe_input").val();
+        let power = $("#" + id).find(".power_input").val();
+        let desc = $("#" + id).find(".desc_input").val();
+        let is_alive = $("#" + id).find(".is_alive_input").prop("checked");
+        is_alive? is_alive = "Y" : is_alive = "N";
+        let phone = $("#" + id).find(".phone_input").val();
+        phone == null ? phone = "" : false;
 
         if (image_path !== current["image_path"] || universe !== current["universe"] || power !== current["power"]
-            || desc !== current["desc"] || is_alive !== current["is_alive"] || phone !== current["phone"]) {
+            || desc !== current["desc"] || is_alive !== current["alive"] || phone !== current["phone"]) {
+            was_in_compare = true;
+
+            is_alive === "Y" ? is_alive = "checked" : is_alive = "";
+            current["alive"] = is_alive;
             preload_card(hero_constructor(name, image_path, universe, power, desc, is_alive, phone));
             preload_card(current);
             $("input:not(#search), textarea").prop("disabled", true);
-
-            toggle_center_header();
-            $(".complex_modal_dialog").show();
             return;
         }
     }
+    $(".right_btn, .left_btn, .right_to_all_btn, .left_to_all_btn").off();
+    $("input:not(#search), textarea").prop("disabled", true);
+    $(".complex_modal_dialog").hide();
+    success_import_dialog();
 }
 
 $("#import_btn").click(function () {
     import_dialog();
 });
-
-function import_dialog() {
-    $(".modal_dialog_text").text("You definitely want to import?");
-    $(".agree_button").on("click", function () {
-        $("#import_loader").prop("disabled", false);
-        $("#import_loader").click();
-        $(".disagree_button").click();
-    });
-    $(".disagree_button").on("click", function (){
-        $("#import_loader").prop("disabled", true);
-        toggle_center_header();
-        $(".modal_dialog").fadeOut(300);
-        $(".disagree_button, .agree_button").off();
-    });
-
-    toggle_center_header();
-    $(".modal_dialog").fadeIn(300);
-}
 
 $("#import_loader").on('change', function () {
     let json;
@@ -149,17 +190,23 @@ $("#import_loader").on('change', function () {
     let file = $("#import_loader").prop('files')[0];
     if (file.type === "application/json") {
         fileReader.onload = function () {
-            // noinspection JSCheckFunctionSignatures
-            //TODO диалог если не запарсил
-            json = JSON.parse(fileReader.result);
+            try {
+                json = JSON.parse(fileReader.result);
+            } catch (e) {
+                error_on_import()
+            }
             import_loading(json);
+        };
+        fileReader.onerror = function () {
+            error_on_import();
         };
         fileReader.readAsText(file);
         $("#import_loader").prop("value", "");
-
     }
     event.stopPropagation();
 });
+
+
 
 $("#export_btn").click(function () {
     let data = {};
@@ -291,26 +338,7 @@ $("#cancel_delete_btn").click(function () {
 
 function delete_cards_from_server() {
     let name = $(".choosed_for_delete").find(".card_name").text();
-
-    let json = JSON.stringify({
-        'action': 'delete',
-        'data': name
-    });
-    logger(INFO, "Starting delete card " + name);
-    $.ajax({
-        method: 'POST',
-        url: 'doAction',
-        data: json,
-        contentType: 'application/json',
-        success: function () {
-            logger(INFO, "Delete finish success!");
-            $(".choosed_for_delete").remove();
-        },
-        error: function (response) {
-            logger(ERROR, response.responseText);
-            $(".draggable").removeClass("choosed_for_delete");
-        }
-    });
+    delete_request(name);
 }
 
 $("#add_param_heroname").keyup(function () {
@@ -374,7 +402,7 @@ function preload_card(hero) {
         '                        </label>\n' +
         '                        <label>\n' +
         '                            <strong>Alive</strong>\n' +
-        '                            <input type="checkbox" class="is_alive_input" value="' + hero["alive"] +'">\n' +
+        '                            <input type="checkbox" class="is_alive_input" ' + hero["alive"] +'>\n' +
         '                        </label>\n' +
         '                        <label>\n' +
         '                            <strong>Phone</strong>\n' +
@@ -394,9 +422,10 @@ function preload_card(hero) {
 }
 
 function create_new_card(hero) {
+    let id = hero["heroname"].replace(' ', '_');
     $("#new_hero_card").before(
         "<div class=\"grid_item_card overturned draggable\">\n" +
-        "            <article id=\"" + hero["heroname"] + "\" class=\"card flipper\">\n" +
+        "            <article id=\"" + id + "\" class=\"card flipper\">\n" +
         "                <div class=\"front\">\n" +
         "                    <div class=\"card_head\">\n" +
         "                        <span class='card_name'>" + hero["heroname"] + "</span>\n" +
@@ -461,6 +490,7 @@ function hero_constructor(heroname, image_path, universe, power, desc, is_alive,
 }
 
 function check_name(name) {
+    name = name.replace(' ', '_');
     let isEq = true;
     if ($("article").is("#" + name)) {
         isEq = false;

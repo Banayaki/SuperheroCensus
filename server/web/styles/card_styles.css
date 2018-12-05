@@ -220,3 +220,8 @@
 .preloaded_card>.card>.front>.card_head>.head_change_pencil {
     display: none;
 }
+
+.complex_modal_btns_group {
+    display: flex;
+    justify-content: center;
+}
