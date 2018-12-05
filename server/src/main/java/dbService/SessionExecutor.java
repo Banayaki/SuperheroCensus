@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @see UserDAO
  */
-@SuppressWarnings("RedundantThrows")
+@SuppressWarnings({"RedundantThrows", "TryFinallyCanBeTryWithResources"})
 public class SessionExecutor implements UserDAO {
     private static Logger logger = LogManager.getLogger();
     private SessionBuilder sessionBuilder;
@@ -45,13 +45,12 @@ public class SessionExecutor implements UserDAO {
         return hero;
     }
 
-    public void addNewHero(List<AbstractHeroEntity> heroList) throws SQLException, CallbackException {
-        String uniqMsg = "UNIQUE constraint failed";
-        String foreignMsg = "transient instance must be saved before";
-
+    public void addNewHero(List<AbstractHeroEntity> heroList) throws SQLException {
         logger.info("Trying to add new heroes");
         Transaction tx = null;
-        try (Session session = sessionBuilder.openNewSession()) {
+        Session session = null;
+        try {
+            session = sessionBuilder.openNewSession();
             tx = session.beginTransaction();
             for (AbstractHeroEntity hero: heroList) {
                 session.save(heroEntity.cast(hero));
@@ -59,22 +58,19 @@ public class SessionExecutor implements UserDAO {
             tx.commit();
             logger.info("New hero was added");
         } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error("Hero doesn't add, because: " + ex.getMessage());
-
-            if (getRootCause(ex).contains(uniqMsg)) {
-                if (tx != null) tx.rollback();
-                throw new CallbackException(uniqMsg);
-            } else if (getRootCause(ex).contains(foreignMsg)) {
-                throw new CallbackException("Unknown universe. I know only " + getUniverseList());
-            }
+            if (tx != null) tx.rollback();
+            throw ex;
+        } finally {
+            if (session != null) session.close();
         }
     }
 
     public void deleteHero(String heroName) throws SQLException {
         logger.info("Trying to delete " + heroName);
         Transaction tx = null;
-        try (Session session = sessionBuilder.openNewSession()) {
+        Session session = null;
+        try {
+            session = sessionBuilder.openNewSession();
             tx = session.beginTransaction();
             session
                     .createQuery("DELETE FROM " + heroEntity.getCanonicalName() + " h WHERE h.heroName like :name")
@@ -83,9 +79,11 @@ public class SessionExecutor implements UserDAO {
             tx.commit();
             logger.info("Successful delete " + heroName);
         } catch (Exception ex) {
-            logger.error("Hero doesn't delete " + ex.getMessage());
-            ex.printStackTrace();
             if (tx != null) tx.rollback();
+            throw ex;
+
+        } finally {
+            if (session != null) session.close();
         }
     }
 
@@ -93,7 +91,9 @@ public class SessionExecutor implements UserDAO {
         logger.info("Trying to change " + heroList.size() + " heroes");
         int countOfChanged = 0;
         Transaction tx = null;
-        try (Session session = sessionBuilder.openNewSession()) {
+        Session session = null;
+        try {
+            session = sessionBuilder.openNewSession();
             tx = session.beginTransaction();
             Query query = session.createQuery("update SuperheroesEntitySQLite set" +
                     " description = :description," +
@@ -108,8 +108,8 @@ public class SessionExecutor implements UserDAO {
             for (AbstractHeroEntity hero: heroList) {
 //                Why it doesn't work???
 //                session.update(heroEntity.cast(hero));
-                logger.debug("Adding the hero: " + hero.toString());
-                countOfChanged = query
+                logger.debug("Changing the hero: " + hero.toString());
+                countOfChanged += query
                         .setParameter("alive", hero.getIsAlive())
                         .setParameter("universe", hero.getUniverse())
                         .setParameter("description", hero.getDescription())
@@ -119,57 +119,36 @@ public class SessionExecutor implements UserDAO {
                         .executeUpdate();
             }
             logger.debug("Changed " + countOfChanged + " heroes");
-            tx.commit();
             if (countOfChanged != heroList.size()) {
-                throw new SQLException("Unknown universe");
+                throw new SQLException("transient instance must be saved before");
             }
+            tx.commit();
             logger.info("Successful changes");
         } catch (Exception ex) {
-            logger.error("Hero doesn't change, because " + ex.getMessage());
             if (tx != null) tx.rollback();
-            String errorMsg = "Row was updated or deleted by another transaction";
-            if (ex.getMessage().contains(errorMsg)) {
-                throw new CallbackException(errorMsg);
-            } else if (ex.getMessage().contains("Unknown universe")) {
+            throw ex;
 
-                throw new CallbackException("Unknown universe. I know only " + getUniverseList());
-            }
+        } finally {
+            if (session != null) session.close();
         }
     }
 
     @Override
-    public void hardUpdateTable(List<AbstractHeroEntity> heroes) throws SQLException {
-        logger.info("Trying to hardUpdate table");
-        Transaction tx = null;
-        try (Session session = sessionBuilder.openNewSession()) {
-            tx = session.beginTransaction();
-            session
-                    .createQuery("DELETE FROM SuperheroesEntitySQLite ")
-                    .executeUpdate();
-            for (AbstractHeroEntity hero : heroes) {
-                session.save(hero);
-            }
-            tx.commit();
-            logger.info("HardUpdate Success");
-        } catch (Exception ex) {
-            logger.error("hardUpdate doesn't happen " + ex.getMessage());
-            if (tx != null) tx.rollback();
-            ex.printStackTrace();
-        }
-    }
-
     public List getHeroesList() throws SQLException {
         logger.info("Trying to get hero list");
         List list = null;
         Transaction tx;
-        try (Session session = sessionBuilder.openNewSession()) {
+        Session session = null;
+        try {
+            session = sessionBuilder.openNewSession();
             tx = session.beginTransaction();
             list = session.createQuery("FROM " + heroEntity.getCanonicalName()).list();
             tx.commit();
             logger.info("Hero list successfully received");
         } catch (Exception ex) {
-            logger.error("Hero list doesn't received, because " + ex.getMessage());
-            ex.printStackTrace();
+            throw ex;
+        }finally {
+            if (session != null) session.close();
         }
         return list;
     }
@@ -182,17 +161,19 @@ public class SessionExecutor implements UserDAO {
         return cause.getMessage();
     }
 
-    private String getUniverseList() {
+    public String getUniverseList() {
         List listOfUniverses;
         String result = "";
-        try (Session session = sessionBuilder.openNewSession()) {
+        Session session = null;
+        try {
+            session = sessionBuilder.openNewSession();
             Transaction helperTx = session.beginTransaction();
             listOfUniverses = session
                     .createQuery("select universe_name from UniverseEntity ").list();
             helperTx.commit();
             result = listOfUniverses.toString();
-        } catch (Exception ex) {
-            logger.error("Something bad with universe table");
+        } finally {
+            if (session != null) session.close();
         }
         return result;
     }

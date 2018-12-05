@@ -7,6 +7,7 @@ import dbService.entity.SuperheroesEntitySQLite;
 import dbService.entity.UniverseEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.CallbackException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -70,21 +71,42 @@ public class ServletHandler extends HttpServlet {
                 case "add":
                     doAdd(json.getJSONArray("data"));
                     break;
-                case "hardUpdate":
-                    doHardUpdate(json.getJSONObject("data"));
-                    break;
                 default:
                     throw new UnsupportedOperationException();
             }
         } catch (Exception ex) {
-            logger.error("Error on " + action + " " + ex.getMessage());
-            resp.getWriter().write(ex.getMessage());
+            String uniqMsg = "UNIQUE constraint failed";
+            String foreignMsg = "transient instance must be saved before";
+            String conflictMsg = "Row was updated or deleted by another transaction";
+
+            StringBuilder errorMsgBuilder = new StringBuilder();
+            Throwable throwable = ex;
+            while (throwable != null) {
+                errorMsgBuilder.append(throwable.getMessage());
+                throwable = throwable.getCause();
+            }
+            String msg = errorMsgBuilder.toString();
+//            logger.error("Error on " + action + " " + ex.getMessage());
+            logger.error("Error on " + action + " " + msg);
+//            logger.error("Error on " + action + " " + ex.getCause().getCause().getMessage());
+
+
+            // TODO error handler
+            if (msg.contains(uniqMsg)) {
+                logger.error(uniqMsg);
+                resp.getWriter().write(uniqMsg);
+            } else if (msg.contains(foreignMsg)) {
+                logger.error("Unknown universe error");
+                resp.getWriter().write("Unknown universe error. Available universes: " + getUniverses() +
+                        " or you're trying to change deleted card");
+            } else if (msg.contains(conflictMsg)) {
+                logger.error(conflictMsg);
+                resp.getWriter().write(conflictMsg);
+            } else {
+                resp.getWriter().write(ex.toString());
+            }
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
         }
-    }
-
-    private void doHardUpdate(JSONObject json) throws SQLException {
-        executor.hardUpdateTable(createListOfHeroes(json));
     }
 
     private JSONObject doLoad() throws SQLException {
@@ -155,5 +177,9 @@ public class ServletHandler extends HttpServlet {
         hero.setPower((byte) json.getInt("power"));
 
         return hero;
+    }
+
+    private String getUniverses() {
+        return executor.getUniverseList();
     }
 }

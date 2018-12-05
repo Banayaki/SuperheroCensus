@@ -16,6 +16,4 @@ public interface UserDAO {
     void changeHero(List<AbstractHeroEntity> heroList) throws SQLException;
 
     List getHeroesList() throws SQLException;
-
-    void hardUpdateTable(List<AbstractHeroEntity> list) throws SQLException;
 }

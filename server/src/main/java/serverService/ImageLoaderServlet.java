@@ -2,6 +2,7 @@ package serverService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import serverService.exceptions.CallbackException;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -35,7 +36,8 @@ public class ImageLoaderServlet extends HttpServlet {
             logger.info("Image successfully uploaded");
         } catch (Exception ex) {
             logger.error("Error on loadImage: " + ex.getMessage());
-            ex.printStackTrace();
+            resp.getWriter().write("Error on loadImage: " + ex.getMessage());
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
         }
     }
 }

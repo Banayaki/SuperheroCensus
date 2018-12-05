@@ -31,7 +31,7 @@ function add_list_request(added) {
 
             if (msg.includes("UNIQUE constraint failed")) {
                 add_unique_failed_dialog();
-            } else if (msg.includes("Unknown universe")) {
+            } else if (msg.includes("unknown universe")) {
                 add_foreign_failed_dialog(msg);
             } else {
                 generify_dialog(msg)
@@ -60,12 +60,15 @@ function change_list_request(changed) {
         },
         error: function (response) {
             logger(ERROR, response.responseText);
+            let msg = response.responseText;
             let error_msg = "Row was updated or deleted by another transaction";
-            if (response.responseText.includes(error_msg)) {
+            if (msg.includes(error_msg)) {
                 changed_card.parents(".grid_item_card").remove();
                 change_dialog(error_msg);
+            } else if (msg.includes("Unknown universe")) {
+                add_foreign_failed_dialog(msg);
             } else {
-                generify_dialog(response.responseText)
+                generify_dialog(msg)
             }
         }
     });
@@ -89,6 +92,8 @@ function delete_request(name) {
         error: function (response) {
             logger(ERROR, response.responseText);
             $(".draggable").removeClass("choosed_for_delete");
+
+            generify_dialog(response.responseText);
         }
     });
 }
@@ -118,6 +123,8 @@ function load_card_on_server(hero) {
             hero["image_path"] = "img/unknown_hero.png";
             image_loading_error_dialog();
             load_card_on_server_default(hero);
+
+            generify_dialog(response.responseText);
         }
     });
 }
@@ -195,7 +202,7 @@ function change_dialog() {
 function add_unique_failed_dialog() {
     $(".modal_dialog_text").text("UNIQUE constraint failed. Page will be reloaded");
     $(".agree_button_text").text("OK");
-    $(".disagree_button_text").hide();
+    $(".disagree_button").hide();
     $(".agree_button").one("click", function () {
         toggle_center_header();
         $(".modal_dialog").fadeOut(300);
@@ -219,6 +226,7 @@ function add_foreign_failed_dialog(msg) {
         toggle_center_header();
         $(".modal_dialog").fadeOut(300);
         setTimeout(function () {
+            location.reload();
             $(".agree_button_text").text("Yep!");
             $(".disagree_button").show();
         }, 300);
@@ -319,3 +327,8 @@ function change_dialog_edit_error(msg) {
     $(".modal_dialog").fadeIn(300);
 }
 
+function check_for_ajax(hero) {
+    hero["image_path"] === null ? hero["image_path"] = "img/unknown_hero.png" : false;
+    hero["alive"] = "checked" || hero["alive"] === "on" || hero["alive"] ? hero["alive"] === "Y" : false;
+    hero["alive"] = "" || hero["alive"] === null || !hero["alive"] ? hero["alive"] === "N"  : false;
+}

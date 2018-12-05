@@ -378,6 +378,7 @@ function errorStringRemover(msgBox, errorMsg) {
 }
 
 function preload_card(hero) {
+    let alive = check_for_html(hero);
     $(".complex_content").append(
         '<div class="grid_item_card overturned preloaded_card">\n' +
         '            <article class="card flipper">\n' +
@@ -402,7 +403,7 @@ function preload_card(hero) {
         '                        </label>\n' +
         '                        <label>\n' +
         '                            <strong>Alive</strong>\n' +
-        '                            <input type="checkbox" class="is_alive_input" ' + hero["alive"] +'>\n' +
+        '                            <input type="checkbox" class="is_alive_input" ' + alive +'>\n' +
         '                        </label>\n' +
         '                        <label>\n' +
         '                            <strong>Phone</strong>\n' +
@@ -423,6 +424,7 @@ function preload_card(hero) {
 
 function create_new_card(hero) {
     let id = hero["heroname"].replace(' ', '_');
+    let alive = check_for_html(hero);
     $("#new_hero_card").before(
         "<div class=\"grid_item_card overturned draggable\">\n" +
         "            <article id=\"" + id + "\" class=\"card flipper\">\n" +
@@ -447,7 +449,7 @@ function create_new_card(hero) {
         "                        </label>\n" +
         "                        <label>\n" +
         "                            <strong>Alive</strong>\n" +
-        "                            <input type=\"checkbox\" class=\"is_alive_input\" " + hero["alive"] + ">\n" +
+        "                            <input type=\"checkbox\" class=\"is_alive_input\" " + alive + ">\n" +
         "                        </label>\n" +
         "                        <label>\n" +
         "                            <strong>Phone</strong>\n" +
@@ -532,4 +534,13 @@ function check_img(url) {
 function toggle_center_header() {
     $(".page_center").toggleClass("hide_animation");
     $(".header").toggleClass("hide_animation");
+}
+
+function check_for_html(hero) {
+    hero["image_path"] === null ? hero["image_path"] = "img/unknown_hero.png" : false;
+    if (hero["alive"] === "Y" || hero["alive"] === "on" || hero["alive"]) {
+        return "checked"
+    } else {
+        return "";
+    }
 }
