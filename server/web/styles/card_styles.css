@@ -81,33 +81,30 @@
     float: right;
 }
 
+.hero_desc {
+    display: grid;
+}
+
 .hero_desc > label {
-    padding: 0;
     height: 25px;
     margin-bottom: 3px;
-    display: block;
+    display: flex;
+    padding: 10px 0;
 }
 
 .hero_desc > label > strong {
-    display: inline;
-
-    width: 60px;
+    line-height: 25px;
+    width: 70px;
     height: 25px;
-    padding-top: 5px;
-    text-align: center;
-    vertical-align: middle;
-    float: left;
 }
 
 .hero_desc > label > input {
     width: 150px;
     height: 25px;
-    vertical-align: middle;
-    float: right;
 }
 
 .hero_image {
-    /*-webkit-user-drag: none;*/
+    -webkit-user-drag: none;
     width: 218px;
     height: 218px;
     padding: 8px;
@@ -116,12 +113,6 @@
 
 .card_name, .hero_desc > * {
     font-weight: bold;
-}
-
-.hero_desc > label {
-    display: block;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 .editable_input {

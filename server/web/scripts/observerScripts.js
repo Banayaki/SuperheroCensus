@@ -1,8 +1,3 @@
-let isDeleteMode = false;
-let isIncorrectLength = false;
-let isIncorrectName = false;
-let isMatch = false;
-
 let ERROR = "ERROR";
 let INFO = "INFO";
 
@@ -13,7 +8,7 @@ let added = [];
 let changed = [];
 
 function onLoad() {
-    let json = JSON.stringify({'action': 'load'});
+    let json = JSON.stringify({'action': 'Load'});
     logger(INFO, "Start loading cards from server");
     $.ajax({
         type: 'POST',
@@ -341,32 +336,7 @@ function delete_cards_from_server() {
     delete_request(name);
 }
 
-$("#add_param_heroname").keyup(function () {
-    let message_box = $("#message");
-    let heroname = $(this).val();
-    if (!isIncorrectLength && heroname.length > 20) {
-        message_box.append("Too big name<br><br>");
-        isIncorrectLength = true;
-    } else if (isIncorrectLength && heroname.length <= 20) {
-        errorStringRemover(message_box, "Too big name");
-        isIncorrectLength = false;
-    }
-    if (!isIncorrectName && !(/^[a-zA-Z_ ]+$/.test(heroname))) {
-        message_box.append("Incorrect name<br><br>");
-        isIncorrectName = true;
-    } else if (isIncorrectName && (/^[a-zA-Z_ ]+$/.test(heroname))) {
-        errorStringRemover(message_box, "Incorrect name");
-        isIncorrectName = false;
-    }
 
-    if (!isMatch && !check_name(heroname)) {
-        message_box.append("Hero with this name is exist<br><br>");
-        isMatch = true;
-    } else if (isMatch && check_name(heroname)) {
-        errorStringRemover(message_box, "Hero with this name is exist");
-        isMatch = false;
-    }
-});
 
 function errorStringRemover(msgBox, errorMsg) {
     let temp = msgBox.text();

@@ -1,4 +1,8 @@
 let in_drag = false;
+
+let isIncorrectLength = false;
+let isIncorrectName = false;
+let isMatch = false;
 // Ссылка на изменяемую карту (нужно для отката изменений)
 let changed_card;
 // Копия изменяемой карты до изменений
@@ -119,10 +123,32 @@ $("#accept_changes").click(function () {
     change_request(hero);
 });
 
+$("#add_param_heroname").keyup(function () {
+    let message_box = $("#message");
+    let heroname = $(this).val();
+    if (!isIncorrectLength && heroname.length > 20) {
+        message_box.append("Too big name<br><br>");
+        isIncorrectLength = true;
+    } else if (isIncorrectLength && heroname.length <= 20) {
+        errorStringRemover(message_box, "Too big name");
+        isIncorrectLength = false;
+    }
+    if (!isIncorrectName && !(/^[a-zA-Z_ ]+$/.test(heroname))) {
+        message_box.append("Incorrect name<br><br>");
+        isIncorrectName = true;
+    } else if (isIncorrectName && (/^[a-zA-Z_ ]+$/.test(heroname))) {
+        errorStringRemover(message_box, "Incorrect name");
+        isIncorrectName = false;
+    }
 
-
-
-
+    if (!isMatch && !check_name(heroname)) {
+        message_box.append("Hero with this name is exist<br><br>");
+        isMatch = true;
+    } else if (isMatch && check_name(heroname)) {
+        errorStringRemover(message_box, "Hero with this name is exist");
+        isMatch = false;
+    }
+});
 
 $("#cancel_changes_btn").click(function () {
     changed_card.replaceWith(backup);
@@ -152,8 +178,8 @@ $("#add_card_btn").click(function () {
 
     message_box.text("");
 
-    if (heroname === "") {
-        message_box.append("Empty heroname<br><br>");
+    if (heroname === "" || isIncorrectLength || isIncorrectName || isMatch) {
+        message_box.append("Wrong heroname. Why you click on button, when message still be here<br><br>");
     }
 
     if (file != null) {

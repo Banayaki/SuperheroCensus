@@ -40,22 +40,6 @@ public class DbTest {
     }
 
     @Test
-    public void testAddStmt() {
-
-    }
-
-    @Test
-    public void testDeleteStmt() {
-
-    }
-
-    @Test
-    public void testUpdateStmt() {
-
-    }
-
-    @Test
-    public void testSelectStmt() {
-
+    public void someTest() {
     }
 }

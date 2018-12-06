@@ -7,7 +7,7 @@ function add_request(hero) {
 
 function add_list_request(added) {
     let json = JSON.stringify({
-        'action': 'add',
+        'action': 'Add',
         'data': added
     });
 
@@ -23,6 +23,7 @@ function add_list_request(added) {
                 create_new_card(added[hero]);
             }
             $("#cancel_adding_btn").click();
+            generify_dialog("Cards was successfully added", false);
         },
         error: function (response) {
             let msg = response.responseText;
@@ -34,7 +35,7 @@ function add_list_request(added) {
             } else if (msg.includes("unknown universe")) {
                 add_foreign_failed_dialog(msg);
             } else {
-                generify_dialog(msg)
+                generify_dialog(msg, true)
             }
         }
     });
@@ -46,7 +47,7 @@ function change_request(changed) {
 
 function change_list_request(changed) {
     let req = JSON.stringify({
-        'action': 'change',
+        'action': 'Change',
         'data': changed
     });
 
@@ -57,6 +58,7 @@ function change_list_request(changed) {
         data: req,
         success: function () {
             logger(INFO, "Change finish success!");
+            generify_dialog("Cards was successfully changed", false)
         },
         error: function (response) {
             logger(ERROR, response.responseText);
@@ -68,7 +70,7 @@ function change_list_request(changed) {
             } else if (msg.includes("Unknown universe")) {
                 add_foreign_failed_dialog(msg);
             } else {
-                generify_dialog(msg)
+                generify_dialog(msg, true)
             }
         }
     });
@@ -76,7 +78,7 @@ function change_list_request(changed) {
 
 function delete_request(name) {
     let json = JSON.stringify({
-        'action': 'delete',
+        'action': 'Delete',
         'data': name
     });
     logger(INFO, "Starting delete card " + name);
@@ -88,12 +90,13 @@ function delete_request(name) {
         success: function () {
             logger(INFO, "Delete finish success!");
             $(".choosed_for_delete").remove();
+            generify_dialog("Cards was successfully deleted", false)
         },
         error: function (response) {
             logger(ERROR, response.responseText);
             $(".draggable").removeClass("choosed_for_delete");
 
-            generify_dialog(response.responseText);
+            generify_dialog(response.responseText, true);
         }
     });
 }
@@ -124,7 +127,7 @@ function load_card_on_server(hero) {
             image_loading_error_dialog();
             load_card_on_server_default(hero);
 
-            generify_dialog(response.responseText);
+            generify_dialog(response.responseText, true);
         }
     });
 }
@@ -149,17 +152,19 @@ function image_loading_error_dialog() {
     $(".modal_dialog").fadeIn(300);
 }
 
-function generify_dialog(msg) {
-    $(".modal_dialog_text").text("Page will be reloaded. Server response with error: " + msg);
-    $(".agree_button_text").text("OK");
+function generify_dialog(msg, error) {
+    let error_msg = "";
+    if (error) {
+        error_msg = "Page will be reloaded. Server response with error: ";
+    }
+    $(".modal_dialog_text").text(error_msg + msg);
     $(".disagree_button").hide();
-    $(".agree_button").on("click", function () {
+    $(".agree_button").one("click", function () {
         toggle_center_header();
         $(".modal_dialog").fadeOut(300);
         setTimeout(function () {
-            $(".agree_button_text").text("Yep!");
             $(".disagree_button").show();
-            location.reload();
+            if (error) location.reload();
         }, 300);
     });
     toggle_center_header();
@@ -301,7 +306,7 @@ function delete_dialog () {
     });
     $(".disagree_button").on("click", function () {
         toggle_center_header();
-        $(".modal_dialog").fadeOut(600);
+        $(".modal_dialog").fadeOut(100);
         $(".disagree_button, .agree_button").off();
     });
 

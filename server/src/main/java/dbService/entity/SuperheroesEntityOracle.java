@@ -35,7 +35,6 @@ public class SuperheroesEntityOracle extends AbstractHeroEntity implements Seria
 
     @Id
     @Column(name = "HERO_ID", nullable = false, precision = 0)
-    @Override
     public short getHeroId() {
         return heroId;
     }

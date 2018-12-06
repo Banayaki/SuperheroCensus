@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -55,25 +56,18 @@ public class ServletHandler extends HttpServlet {
         try {
             JSONObject json = new JSONObject(stringBuilder.toString());
             action = json.getString("action");
+            Object param = null;
+            if (json.has("data")) {
+                param = json.get("data");
+            }
+
             logger.info("POST Request, on /doAction with action: " + action);
 
-            switch (action) {
-                case "load":
-                    String result = doLoad().toString(4);
-                    resp.getWriter().write(result);
-                    break;
-                case "change":
-                    doChange(json.getJSONArray("data"));
-                    break;
-                case "delete":
-                    doDelete(json.getString("data"));
-                    break;
-                case "add":
-                    doAdd(json.getJSONArray("data"));
-                    break;
-                default:
-                    throw new UnsupportedOperationException();
+            Object returnValue = invokeMethod(action, param);
+            if (returnValue != null) {
+                resp.getWriter().write(returnValue.toString());
             }
+
         } catch (Exception ex) {
             String uniqMsg = "UNIQUE constraint failed";
             String foreignMsg = "transient instance must be saved before";
@@ -86,9 +80,7 @@ public class ServletHandler extends HttpServlet {
                 throwable = throwable.getCause();
             }
             String msg = errorMsgBuilder.toString();
-//            logger.error("Error on " + action + " " + ex.getMessage());
             logger.error("Error on " + action + " " + msg);
-//            logger.error("Error on " + action + " " + ex.getCause().getCause().getMessage());
 
 
             // TODO error handler
@@ -182,4 +174,18 @@ public class ServletHandler extends HttpServlet {
     private String getUniverses() {
         return executor.getUniverseList();
     }
+
+    private Object invokeMethod(String action, Object param) throws Exception {
+        Object returnValue;
+
+        if (param == null) {
+            Method callingMethod = this.getClass().getDeclaredMethod("do".concat(action));
+            returnValue = callingMethod.invoke(this);
+        } else {
+            Method callingMethod = this.getClass().getDeclaredMethod("do".concat(action), param.getClass());
+            returnValue = callingMethod.invoke(this, param.getClass().cast(param));
+        }
+        return returnValue;
+    }
+
 }

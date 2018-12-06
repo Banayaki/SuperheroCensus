@@ -17,6 +17,13 @@
     -ms-user-select: none;
 }
 
+/**:not(input, textarea) {*/
+/*user-select: none;*/
+/*-moz-user-select: none;*/
+/*-webkit-user-select: none;*/
+/*-ms-user-select: none;*/
+/*}*/
+
 html {
     background-color: #e9eaed;
     font-family: Arial, sans-serif;
@@ -43,16 +50,17 @@ input {
 }
 
 .import_export_group {
-    display: inline-block;
-    float: right;
+    display: inline-flex;
     text-align: right;
+    margin-left: auto;
 }
 
 .logo {
-    display: inline-block;
+    display: inline-flex;
     vertical-align: middle;
     width: 40px;
     height: 47px;
+    margin-top: 10px;
 }
 
 .search_field {
@@ -60,10 +68,7 @@ input {
     float: left;
 }
 
-/*Hidden*/
-.delete_mode, .change_mode, .add_mode, .page_center_addhero {
-    display: none;
-}
+
 
 .delete_mode {
     padding-top: 13px;
@@ -78,11 +83,33 @@ input {
     overflow-x: hidden;
     overflow-y: hidden;
     white-space: nowrap;
+    display: flex;
+}
+
+/*Hidden*/
+.delete_mode, .change_mode, .add_mode, .page_center_addhero {
+    display: none;
+}
+
+.delete_mode > .white_text {
+    line-height: 0;
+}
+
+.sort_btns_group {
+    display: flex;
 }
 
 .page_center {
     position: relative;
     top: 40px;
+}
+
+#fileloader {
+    width: 414px;
+}
+
+.header_content > span {
+    line-height: 70px;
 }
 
 #grid {
@@ -294,5 +321,8 @@ textarea {
     width: max-content;
     width: -moz-max-content;
     height: auto;
+}
 
+.navigation_bar.header_content > div {
+    cursor: pointer;
 }
