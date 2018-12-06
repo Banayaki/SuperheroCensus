@@ -188,7 +188,7 @@ function change_dialog() {
         let page_center = $(".page_center");
         page_center.fadeOut(400, function () {
             $(".page_center_addhero").fadeIn(400, function () {
-                $("input:not(#search), textarea").prop("disabled", false);
+                $("input:not(#search, .filter), textarea").prop("disabled", false);
             });
         });
 

@@ -109,7 +109,7 @@ $("#accept_changes").click(function () {
     }
 
     $("input, textarea").removeClass("editable_input");
-    $("input:not(#search), textarea").prop("disabled", true);
+    $("input:not(#search, .filter), textarea").prop("disabled", true);
 
     $(".change_mode").fadeOut(400, function () {
         $(".navigation_bar").fadeIn(400)
@@ -154,7 +154,7 @@ $("#cancel_changes_btn").click(function () {
     changed_card.replaceWith(backup);
     backup = "";
     changed_card = "";
-    $("input:not(#search), textarea").prop("disabled", true);
+    $("input:not(#search, .filter), textarea").prop("disabled", true);
     $("input, textarea").removeClass("editable_input");
     $(".change_mode").fadeOut(400, function () {
         $(".navigation_bar").fadeIn(400)

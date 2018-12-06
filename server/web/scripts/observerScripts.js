@@ -74,7 +74,7 @@ function card_loader(json) {
     for (let index = 0; index < cards.length; index++) {
         if (check_name(cards[index]["heroname"])) create_new_card(cards[index]);
     }
-    $("input:not(#search), textarea").prop("disabled", true);
+    $("input:not(#search, .filter), textarea").prop("disabled", true);
 }
 
 function import_loading(json) {
@@ -112,14 +112,14 @@ function import_loading(json) {
         }
         $(".preloaded_card").remove();
         $(".complex_modal_dialog").hide();
-        $("input:not(#search), textarea").prop("disabled", true);
+        $("input:not(#search, .filter), textarea").prop("disabled", true);
         success_import_dialog();
     });
 
     $(".left_to_all_btn").on("click", function () {
         $(".preloaded_card").remove();
         $(".complex_modal_dialog").hide();
-        $("input:not(#search), textarea").prop("disabled", true);
+        $("input:not(#search, .filter), textarea").prop("disabled", true);
         success_import_dialog();
     });
 
@@ -165,12 +165,12 @@ function compare_heroes() {
             current["alive"] = is_alive;
             preload_card(hero_constructor(name, image_path, universe, power, desc, is_alive, phone));
             preload_card(current);
-            $("input:not(#search), textarea").prop("disabled", true);
+            $("input:not(#search, .filter), textarea").prop("disabled", true);
             return;
         }
     }
     $(".right_btn, .left_btn, .right_to_all_btn, .left_to_all_btn").off();
-    $("input:not(#search), textarea").prop("disabled", true);
+    $("input:not(#search, .filter), textarea").prop("disabled", true);
     $(".complex_modal_dialog").hide();
     success_import_dialog();
 }
@@ -288,16 +288,6 @@ $("#power_sort").click(function () {
     }
 });
 
-$("#search").keyup(function () {
-    let _this = this;
-    $.each($(".card_name"), function () {
-        if ($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {
-            $(this).closest(".grid_item_card").hide();
-        } else {
-            $(this).closest(".grid_item_card").show();
-        }
-    })
-});
 
 function onAddHero() {
     $(".navigation_bar").fadeOut(400, function () {
@@ -305,13 +295,13 @@ function onAddHero() {
     });
     $(".page_center").fadeOut(400, function () {
         $(".page_center_addhero").fadeIn(400, function () {
-            $("input:not(#search), textarea").prop("disabled", false);
+            $("input:not(#search, .filter), textarea").prop("disabled", false);
         });
     });
 }
 
 $("#cancel_adding_btn").click(function () {
-    $("input:not(#search), textarea").prop("disabled", true);
+    $("input:not(#search, .filter), textarea").prop("disabled", true);
     $("input").removeClass("editable_input");
     $(".add_mode").fadeOut(400, function () {
         $(".navigation_bar").fadeIn(400)
@@ -513,4 +503,9 @@ function check_for_html(hero) {
     } else {
         return "";
     }
+}
+
+function toggle_inputs() {
+    $("input:not(#search, .filter), textarea").prop("disabled", true);
+
 }

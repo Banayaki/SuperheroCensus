@@ -4,7 +4,7 @@
 
 .grid_item_card {
     margin: 1em;
-    display: inline-block;
+    display: inline-flex;
     vertical-align: top;
     width: 250px;
     height: 419px;
