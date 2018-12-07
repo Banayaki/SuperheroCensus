@@ -83,10 +83,6 @@ $(function () {
             this._on(this.input, {
                 autocompleteselect: function (event, ui) {
                     this.input.val(ui.item.value);
-                    // ui.item.option.selected = true;
-                    // this._trigger( "select", event, {
-                    //     item: ui.item.option
-                    // });
                 },
 
                 autocompletechange: "_removeIfInvalid"

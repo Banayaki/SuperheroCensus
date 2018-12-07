@@ -128,6 +128,7 @@ function import_loading(json) {
         let id = current["heroname"].replace(" ", "_");
         $("#" + id).parents(".grid_item_card").remove();
         create_new_card(current);
+        current["alive"] === "checked" ? current["alive"] = "Y" : current["alive"] = "N";
         changed.push(current);
         compare_heroes();
     });
