@@ -1,4 +1,32 @@
-let universes = ["All", "Marvel", "DC"];
+let universes = [];
+
+function set_inverse_filter(_universes) {
+    _universes.push("All");
+    universes = _universes;
+}
+
+
+function get_universe_request() {
+    let json = JSON.stringify({
+        'action': "GetUniverses"
+    });
+
+    $.ajax({
+        method: 'POST',
+        url: 'doAction',
+        data: json,
+        success: function (response) {
+            console.log("Universes get success");
+            let universes_list = response;
+            universes_list = universes_list.substring(1, universes_list.length - 1).split(" ");
+            set_inverse_filter(universes_list);
+        },
+        error: function () {
+            console.log("Universes list doesn't get");
+        }
+    })
+}
+
 
 $(function () {
     $.widget("custom.combobox", {
@@ -24,22 +52,27 @@ $(function () {
                 .autocomplete({
                     delay: 0,
                     minLength: 0,
-                    source: universes,
-                    select: function (event, ui) {
-                        // let val = ui.item.value;
-                        // if (val === "All") {
-                        //     $(".grid_item_card").show();
-                        // } else {
-                        //     $.each($(".universe_input"), function () {
-                        //         let input_val = $(this).val();
-                        //         if (input_val === val) {
-                        //             $(this).closest(".grid_item_card").show();
-                        //         } else {
-                        //             $(this).closest(".grid_item_card").hide();
-                        //         }
-                        //     });
-                        // }
-                    }
+                    source: function (request, resp) {
+                        let json = JSON.stringify({
+                            'action': "GetUniverses"
+                        });
+
+                        $.ajax({
+                            method: 'POST',
+                            url: 'doAction',
+                            data: json,
+                            success: function (response) {
+                                console.log("Universes get success");
+                                let universes_list = response;
+                                universes_list = universes_list.substring(1, universes_list.length - 1).replace(new RegExp(',', 'g'), "").split(" ");
+                                set_inverse_filter(universes_list);
+                                resp(universes);
+                            },
+                            error: function () {
+                                console.log("Universes list doesn't get");
+                            }
+                        });
+                    },
                 })
                 .tooltip({
                     classes: {
@@ -171,4 +204,8 @@ $("#filter_button").on("click", function () {
 
 $("#without_filter_button").on("click", function () {
     $(".grid_item_card").show();
+});
+
+$("#combobox").on("click focus focusin", function () {
+    get_universe_request();
 });

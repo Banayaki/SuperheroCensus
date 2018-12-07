@@ -1,3 +1,4 @@
+
 function add_request(hero) {
     let array = [];
     hero["alive"] === "on" ? hero["alive"] = "Y" : hero["alive"] = "N";

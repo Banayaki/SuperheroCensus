@@ -33,6 +33,7 @@ import java.util.List;
  * "add" - добавление персонажа в БД
  * "hardUpdate" - удаляет всех героев из БД и добавляет новых
  */
+@SuppressWarnings("unused")
 @WebServlet(name = "ServletHandler", urlPatterns = {"/doAction"})
 public class ServletHandler extends HttpServlet {
     private static Logger logger = LogManager.getLogger();
@@ -132,6 +133,15 @@ public class ServletHandler extends HttpServlet {
         executor.addNewHero(createHeroesFromJSONArray(json));
     }
 
+    private String doGetUniverses() throws Exception {
+        return getUniverses();
+    }
+
+    private String getUniverses() {
+        return executor.getUniverseList();
+    }
+
+
     private List<AbstractHeroEntity> createListOfHeroes(JSONObject json) {
         List<AbstractHeroEntity> heroList = new LinkedList<>();
 
@@ -156,7 +166,6 @@ public class ServletHandler extends HttpServlet {
         return createHeroFromJSON(json);
     }
 
-
     private AbstractHeroEntity createHeroFromJSON(JSONObject json) {
         AbstractHeroEntity hero = new SuperheroesEntitySQLite();
 
@@ -171,9 +180,6 @@ public class ServletHandler extends HttpServlet {
         return hero;
     }
 
-    private String getUniverses() {
-        return executor.getUniverseList();
-    }
 
     private Object invokeMethod(String action, Object param) throws Exception {
         Object returnValue;

@@ -293,7 +293,7 @@ function onAddHero() {
     $(".navigation_bar").fadeOut(400, function () {
         $(".add_mode").fadeIn(400)
     });
-    $(".page_center").fadeOut(400, function () {
+    $(".page_center, .filter_group").fadeOut(400, function () {
         $(".page_center_addhero").fadeIn(400, function () {
             $("input:not(#search, .filter), textarea").prop("disabled", false);
         });
@@ -307,12 +307,11 @@ $("#cancel_adding_btn").click(function () {
         $(".navigation_bar").fadeIn(400)
     });
     $(".page_center_addhero").fadeOut(400, function () {
-        $(".page_center").fadeIn(400);
+        $(".page_center, .filter_group").fadeIn(400);
     });
 });
 
 $("#cancel_delete_btn").click(function () {
-    isDeleteMode = false;
     $(".grid_item_card").removeClass("choosed_for_delete");
     $(".delete_mode").fadeOut(400, function () {
         $(".navigation_bar").fadeIn(400)
